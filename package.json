@@ -13,7 +13,7 @@
     "start": "node dist/index.cjs",
     "build": "tsup src/index.ts --minify --external unfetch,ffmpeg-static",
     "docker-build": "docker build -t boss-battle-music-bot .",
-    "docker-save": "docker save boss-battle-music-bot:latest -o discord-bot.tar",
+    "docker-save": "docker save boss-battle-music-bot:latest -o music-discord-bot.tar",
     "build-prod": "npm run build && npm run docker-build && npm run docker-save"
   },
   "dependencies": {
