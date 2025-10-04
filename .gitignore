@@ -1,0 +1,5 @@
+dist
+node_modules
+music
+discord-bot.tar
+.env
