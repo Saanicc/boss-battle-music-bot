@@ -7,6 +7,7 @@ import {
   GatewayIntentBits,
   Message,
   MessageCreateOptions,
+  MessageEditOptions,
   TextChannel,
 } from "discord.js";
 import { deployCommands } from "./deploy-commands.js";
@@ -20,7 +21,7 @@ import { pauseMusic } from "./interactions/buttons/pause.js";
 import { startMusic } from "./interactions/buttons/start.js";
 
 let nowPlayingMessage: Message;
-let nowPlayingData: MessageCreateOptions;
+let nowPlayingData: MessageCreateOptions | MessageEditOptions;
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
@@ -65,7 +66,7 @@ player.events.on("playerStart", async (queue, track) => {
   const channel = queue.metadata.channel as TextChannel;
 
   if (nowPlayingMessage) {
-    await nowPlayingMessage.edit({
+    const data = {
       embeds: [
         {
           title: "Now Playing 🎶",
@@ -81,7 +82,9 @@ player.events.on("playerStart", async (queue, track) => {
           color: 0x1db954,
         },
       ],
-    });
+    } as MessageEditOptions;
+    await nowPlayingMessage.edit(data);
+    nowPlayingData = data;
   } else {
     const row = new ActionRowBuilder<ButtonBuilder>();
     row.addComponents(
@@ -127,7 +130,7 @@ player.events.on("playerPause", async () => {
   row.addComponents(
     new ButtonBuilder()
       .setCustomId("start")
-      .setLabel("Start")
+      .setLabel("Resume")
       .setStyle(ButtonStyle.Primary),
     new ButtonBuilder()
       .setCustomId("stop")
