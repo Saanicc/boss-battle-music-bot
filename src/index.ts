@@ -20,16 +20,16 @@ import { stopMusic } from "./interactions/buttons/stop.js";
 import { pauseMusic } from "./interactions/buttons/pause.js";
 import { startMusic } from "./interactions/buttons/start.js";
 
-let nowPlayingMessage: Message;
-let nowPlayingData: MessageCreateOptions | MessageEditOptions;
+let nowPlayingMessage: Message | undefined;
+let nowPlayingData: MessageCreateOptions | MessageEditOptions | undefined;
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
 });
 
-client.once("clientReady", () => {
+client.once("clientReady", async () => {
   console.log(`🤖 Logged in as ${client.user?.tag}`);
-  setBotActivity(client, "Awaiting greatness...", ActivityType.Custom);
+  await setBotActivity(client, "/play_boss_music", ActivityType.Listening);
 });
 
 client.on("guildCreate", async (guild) => {
@@ -139,7 +139,7 @@ player.events.on("playerPause", async () => {
   );
 
   await nowPlayingMessage?.edit({
-    embeds: nowPlayingData.embeds,
+    embeds: nowPlayingData?.embeds,
     components: [row],
   });
   await setBotActivity(client, "Music paused", ActivityType.Custom);
@@ -159,8 +159,14 @@ player.events.on("playerResume", async () => {
   );
 
   await nowPlayingMessage?.edit({
-    embeds: nowPlayingData.embeds,
+    embeds: nowPlayingData?.embeds,
     components: [row],
   });
   await setBotActivity(client, "EPIC boss music", ActivityType.Listening);
+});
+
+player.events.on("queueDelete", async () => {
+  nowPlayingMessage = undefined;
+  nowPlayingData = undefined;
+  await setBotActivity(client, "/play_boss_music", ActivityType.Listening);
 });
