@@ -27,6 +27,22 @@ export const execute = async (interaction: CommandInteraction) => {
     return;
   }
 
+  const playerNode = player.nodes.get(guildMember.guild);
+  if (playerNode) {
+    interaction.reply({
+      embeds: [
+        {
+          title: "Queue already exists!",
+          description:
+            "A player queue already exists. If music is paused, please use the resume button instead.",
+          color: 0xffcc00,
+        },
+      ],
+      flags: "Ephemeral",
+    });
+    return;
+  }
+
   // Grab all audio files
   const musicDir = path.join(process.cwd(), "music");
   const files = fs
