@@ -1,9 +1,8 @@
-import { CommandInteraction, SlashCommandBuilder } from "discord.js";
-import fs from "fs";
-import path from "path";
+import { CommandInteraction, SlashCommandBuilder, User } from "discord.js";
 import { player } from "../../index";
-import { QueryType, Track } from "discord-player";
+import { Track } from "discord-player";
 import { EMBED_COLORS } from "../../utils/constants";
+import { getAllMusicFiles } from "../../utils/helpers/getAllMusicFiles";
 
 const shuffleArray = (arr: Track[]) => {
   for (let i = arr.length - 1; i > 0; i--) {
@@ -44,45 +43,29 @@ export const execute = async (interaction: CommandInteraction) => {
     return;
   }
 
-  // Grab all audio files
-  const musicDir = path.join(process.cwd(), "music");
-  const files = fs
-    .readdirSync(musicDir)
-    .filter(
-      (f) => f.endsWith(".mp3") || f.endsWith(".flac") || f.endsWith(".wav")
-    );
-
-  if (files.length === 0) {
-    await interaction.reply("⚠️ No music files found in `/music` folder!");
-    return;
-  }
-
-  const filePaths = files.map((f) => path.resolve(musicDir, f));
-
   try {
+    const tracks = await getAllMusicFiles("music", player, interaction.user);
+
     const queue = player.nodes.create(guildMember.guild, {
       metadata: { channel: interaction.channel },
     });
 
-    const tracks: Track[] = [];
+    queue.addTrack(shuffleArray(tracks));
 
-    for (const filePath of filePaths) {
-      const result = await player.search(filePath, {
-        requestedBy: interaction.user,
-        searchEngine: QueryType.FILE,
-      });
-      if (result.hasTracks()) {
-        tracks.push(result.tracks[0]);
-      }
-    }
-    const shuffledTracks = shuffleArray(tracks);
+    const hornTracks = await getAllMusicFiles(
+      "music/horns",
+      player,
+      interaction.user
+    );
+    queue.insertTrack(hornTracks[2]);
 
-    queue.addTrack(shuffledTracks);
     if (!queue.connection) await queue.connect(channel);
 
     if (!queue.isPlaying()) await queue.node.play();
 
-    await interaction.reply(`🎶 Shuffled and queued ${files.length} tracks!`);
+    await interaction.reply(
+      `🎶 Shuffled and queued ${queue.tracks.size} tracks!`
+    );
   } catch (err) {
     console.error(err);
     await interaction.reply("❌ Something went wrong while trying to play.");
