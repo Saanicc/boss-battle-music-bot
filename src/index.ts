@@ -16,9 +16,10 @@ import { config } from "./config.js";
 import { setBotActivity } from "./utils/helpers/setBotActivity.js";
 import { Player } from "discord-player";
 import { AttachmentExtractor } from "@discord-player/extractor";
-import { stopMusic } from "./interactions/buttons/stop.js";
-import { pauseMusic } from "./interactions/buttons/pause.js";
-import { startMusic } from "./interactions/buttons/start.js";
+import { buttons } from "./interactions/buttons/index.js";
+import { pauseButton } from "./interactions/buttons/pause.js";
+import { stopButton } from "./interactions/buttons/stop.js";
+import { resumeButton } from "./interactions/buttons/resume.js";
 
 let nowPlayingMessage: Message | undefined;
 let nowPlayingData: MessageCreateOptions | MessageEditOptions | undefined;
@@ -44,14 +45,9 @@ client.on("interactionCreate", async (interaction) => {
     }
   }
   if (interaction.isButton()) {
-    if (interaction.customId.startsWith("start")) {
-      await startMusic(interaction);
-    }
-    if (interaction.customId.startsWith("stop")) {
-      await stopMusic(interaction);
-    }
-    if (interaction.customId.startsWith("pause")) {
-      await pauseMusic(interaction);
+    const button = interaction.customId;
+    if (buttons[button as keyof typeof buttons]) {
+      buttons[button as keyof typeof buttons].execute(interaction);
     }
   }
 });
@@ -87,16 +83,7 @@ player.events.on("playerStart", async (queue, track) => {
     nowPlayingData = data;
   } else {
     const row = new ActionRowBuilder<ButtonBuilder>();
-    row.addComponents(
-      new ButtonBuilder()
-        .setCustomId("pause")
-        .setLabel("Pause")
-        .setStyle(ButtonStyle.Primary),
-      new ButtonBuilder()
-        .setCustomId("stop")
-        .setLabel("Stop")
-        .setStyle(ButtonStyle.Danger)
-    );
+    row.addComponents(pauseButton, stopButton);
 
     const data = {
       embeds: [
@@ -127,16 +114,7 @@ player.events.on("playerStart", async (queue, track) => {
 
 player.events.on("playerPause", async () => {
   const row = new ActionRowBuilder<ButtonBuilder>();
-  row.addComponents(
-    new ButtonBuilder()
-      .setCustomId("start")
-      .setLabel("Resume")
-      .setStyle(ButtonStyle.Primary),
-    new ButtonBuilder()
-      .setCustomId("stop")
-      .setLabel("Stop")
-      .setStyle(ButtonStyle.Danger)
-  );
+  row.addComponents(resumeButton, stopButton);
 
   await nowPlayingMessage?.edit({
     embeds: nowPlayingData?.embeds,
@@ -147,16 +125,7 @@ player.events.on("playerPause", async () => {
 
 player.events.on("playerResume", async () => {
   const row = new ActionRowBuilder<ButtonBuilder>();
-  row.addComponents(
-    new ButtonBuilder()
-      .setCustomId("pause")
-      .setLabel("Pause")
-      .setStyle(ButtonStyle.Primary),
-    new ButtonBuilder()
-      .setCustomId("stop")
-      .setLabel("Stop")
-      .setStyle(ButtonStyle.Danger)
-  );
+  row.addComponents(pauseButton, stopButton);
 
   await nowPlayingMessage?.edit({
     embeds: nowPlayingData?.embeds,

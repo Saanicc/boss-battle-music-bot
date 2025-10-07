@@ -1,8 +1,12 @@
-import { ButtonInteraction } from "discord.js";
-import { player } from "../../index";
+import { ButtonBuilder, ButtonInteraction, ButtonStyle } from "discord.js";
 import { useTimeline } from "discord-player";
 
-export const pauseMusic = async (interaction: ButtonInteraction) => {
+export const pauseButton = new ButtonBuilder()
+  .setCustomId("pause")
+  .setLabel("Pause")
+  .setStyle(ButtonStyle.Primary);
+
+export const execute = async (interaction: ButtonInteraction) => {
   const { guild } = interaction;
   if (!guild) {
     await interaction.reply("⚠️ No guild was found.");

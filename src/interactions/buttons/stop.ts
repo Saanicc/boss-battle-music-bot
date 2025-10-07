@@ -1,7 +1,12 @@
-import { ButtonInteraction } from "discord.js";
+import { ButtonBuilder, ButtonInteraction, ButtonStyle } from "discord.js";
 import { player } from "../../index";
 
-export const stopMusic = async (interaction: ButtonInteraction) => {
+export const stopButton = new ButtonBuilder()
+  .setCustomId("stop")
+  .setLabel("Stop")
+  .setStyle(ButtonStyle.Danger);
+
+export const execute = async (interaction: ButtonInteraction) => {
   const { guildId } = interaction;
 
   if (!guildId) {
