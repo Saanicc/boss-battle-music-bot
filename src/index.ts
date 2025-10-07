@@ -90,7 +90,7 @@ player.events.on("playerResume", async (queue) => {
 player.events.on("queueDelete", async () => {
   const embed = {
     title: "Music stopped",
-    description: "Music stopped and queue cleared.\nDisconnecting...",
+    description: "Queue cleared.\nDisconnecting...",
     color: EMBED_COLORS.red,
   };
 
