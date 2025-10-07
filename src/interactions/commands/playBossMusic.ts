@@ -1,8 +1,8 @@
 import { CommandInteraction, SlashCommandBuilder, User } from "discord.js";
 import { player } from "../../index";
 import { Track } from "discord-player";
-import { EMBED_COLORS } from "../../utils/constants";
 import { getAllMusicFiles } from "../../utils/helpers/getAllMusicFiles";
+import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
 
 const shuffleArray = (arr: Track[]) => {
   for (let i = arr.length - 1; i > 0; i--) {
@@ -23,23 +23,25 @@ export const execute = async (interaction: CommandInteraction) => {
   const channel = guildMember?.voice.channel;
 
   if (!channel) {
-    await interaction.reply("❌ You must be in a voice channel.");
+    const data = buildEmbedMessage({
+      title: "❌ You must be in a voice channel.",
+      color: "red",
+      ephemeral: true,
+    });
+    await interaction.reply(data);
     return;
   }
 
   const playerNode = player.nodes.get(guildMember.guild);
   if (playerNode) {
-    interaction.reply({
-      embeds: [
-        {
-          title: "Queue already exists!",
-          description:
-            "A player queue already exists. If music is paused, please use the resume button instead.",
-          color: EMBED_COLORS.orange,
-        },
-      ],
-      flags: "Ephemeral",
+    const data = buildEmbedMessage({
+      title: "Queue already exists!",
+      color: "orange",
+      description:
+        "A player queue already exists. If music is paused, please use the resume button instead.",
+      ephemeral: true,
     });
+    interaction.reply(data);
     return;
   }
 
@@ -63,9 +65,10 @@ export const execute = async (interaction: CommandInteraction) => {
 
     if (!queue.isPlaying()) await queue.node.play();
 
-    await interaction.reply(
-      `🎶 Shuffled and queued ${queue.tracks.size} tracks!`
-    );
+    const data = buildEmbedMessage({
+      title: `🎶 Shuffled and queued ${queue.tracks.size} tracks!`,
+    });
+    await interaction.reply(data);
   } catch (err) {
     console.error(err);
     await interaction.reply("❌ Something went wrong while trying to play.");

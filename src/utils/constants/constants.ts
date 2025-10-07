@@ -1,4 +1,5 @@
 import { ActivityType } from "discord.js";
+import { EmbedColors } from "./constants.types";
 
 export const BOT_STATUS = {
   playing: { name: "EPIC boss music", type: ActivityType.Listening },
@@ -6,7 +7,7 @@ export const BOT_STATUS = {
   idle: { name: "/play_boss_music", type: ActivityType.Listening },
 };
 
-export const EMBED_COLORS = {
+export const EMBED_COLORS: EmbedColors = {
   red: 0xff0000,
   green: 0x1db954,
   orange: 0xffcc00,

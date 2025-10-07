@@ -8,7 +8,7 @@ import {
 import { pauseButton } from "../../interactions/buttons/pause";
 import { stopButton } from "../../interactions/buttons/stop";
 import { resumeButton } from "../../interactions/buttons/resume";
-import { EMBED_COLORS } from "../constants";
+import { EMBED_COLORS } from "../constants/constants";
 
 export const buildNowPlayingMessage = (
   track: Track,

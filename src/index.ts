@@ -14,7 +14,7 @@ import { Player, Track } from "discord-player";
 import { AttachmentExtractor } from "@discord-player/extractor";
 import { buttons } from "./interactions/buttons/index.js";
 import { buildNowPlayingMessage } from "./utils/embeds/nowPlayingMessage.js";
-import { BOT_STATUS, EMBED_COLORS } from "./utils/constants.js";
+import { BOT_STATUS, EMBED_COLORS } from "./utils/constants/constants.js";
 import { updateNowPlayingMessage } from "./utils/helpers/updateNowPlayingMessage.js";
 
 let nowPlayingMessage: Message | undefined;
@@ -89,8 +89,7 @@ player.events.on("playerResume", async (queue) => {
 
 player.events.on("queueDelete", async () => {
   const embed = {
-    title: "Music stopped",
-    description: "Queue cleared.\nDisconnecting...",
+    title: "Left the voice channel",
     color: EMBED_COLORS.red,
   };
 
