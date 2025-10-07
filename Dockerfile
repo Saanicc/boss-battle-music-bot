@@ -12,6 +12,5 @@ COPY --chown=discord-bot:discord package*.json ./
 RUN npm ci --omit=dev
 
 COPY --chown=discord-bot:discord dist ./dist
-COPY --chown=discord-bot:discord music ./music
 
 CMD ["node", "dist/index.cjs"]
