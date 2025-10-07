@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { player } from "../../index";
 import { QueryType, Track } from "discord-player";
+import { EMBED_COLORS } from "../../utils/constants";
 
 const shuffleArray = (arr: Track[]) => {
   for (let i = arr.length - 1; i > 0; i--) {
@@ -35,7 +36,7 @@ export const execute = async (interaction: CommandInteraction) => {
           title: "Queue already exists!",
           description:
             "A player queue already exists. If music is paused, please use the resume button instead.",
-          color: 0xffcc00,
+          color: EMBED_COLORS.orange,
         },
       ],
       flags: "Ephemeral",

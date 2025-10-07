@@ -22,5 +22,4 @@ export const execute = async (interaction: ButtonInteraction) => {
   }
 
   queue.delete();
-  await interaction.reply("🛑 Music stopped and queue cleared.");
 };

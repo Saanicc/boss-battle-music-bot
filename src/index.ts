@@ -1,8 +1,4 @@
 import {
-  ActionRowBuilder,
-  ActivityType,
-  ButtonBuilder,
-  ButtonStyle,
   Client,
   GatewayIntentBits,
   Message,
@@ -14,12 +10,12 @@ import { deployCommands } from "./deploy-commands.js";
 import { commands } from "./interactions/commands/index.js";
 import { config } from "./config.js";
 import { setBotActivity } from "./utils/helpers/setBotActivity.js";
-import { Player } from "discord-player";
+import { Player, Track } from "discord-player";
 import { AttachmentExtractor } from "@discord-player/extractor";
 import { buttons } from "./interactions/buttons/index.js";
-import { pauseButton } from "./interactions/buttons/pause.js";
-import { stopButton } from "./interactions/buttons/stop.js";
-import { resumeButton } from "./interactions/buttons/resume.js";
+import { buildNowPlayingMessage } from "./utils/embeds/nowPlayingMessage.js";
+import { BOT_STATUS, EMBED_COLORS } from "./utils/constants.js";
+import { updateNowPlayingMessage } from "./utils/helpers/updateNowPlayingMessage.js";
 
 let nowPlayingMessage: Message | undefined;
 let nowPlayingData: MessageCreateOptions | MessageEditOptions | undefined;
@@ -30,7 +26,7 @@ const client = new Client({
 
 client.once("clientReady", async () => {
   console.log(`🤖 Logged in as ${client.user?.tag}`);
-  await setBotActivity(client, "/play_boss_music", ActivityType.Listening);
+  await setBotActivity(client, BOT_STATUS.idle.name, BOT_STATUS.idle.type);
 });
 
 client.on("guildCreate", async (guild) => {
@@ -60,82 +56,50 @@ player.extractors.register(AttachmentExtractor, {});
 
 player.events.on("playerStart", async (queue, track) => {
   const channel = queue.metadata.channel as TextChannel;
+  const data = buildNowPlayingMessage(track, true);
 
   if (nowPlayingMessage) {
-    const data = {
-      embeds: [
-        {
-          title: "Now Playing 🎶",
-          description: `**${track.title}**`,
-          fields: [
-            {
-              name: "Requested by",
-              value: track.requestedBy?.toString() ?? "Unknown",
-              inline: true,
-            },
-            { name: "Duration", value: track.duration, inline: true },
-          ],
-          color: 0x1db954,
-        },
-      ],
-    } as MessageEditOptions;
-    await nowPlayingMessage.edit(data);
+    await nowPlayingMessage.edit(data as MessageEditOptions);
     nowPlayingData = data;
   } else {
-    const row = new ActionRowBuilder<ButtonBuilder>();
-    row.addComponents(pauseButton, stopButton);
-
-    const data = {
-      embeds: [
-        {
-          title: "Now Playing 🎶",
-          description: `**${track.title}**`,
-          fields: [
-            {
-              name: "Requested by",
-              value: track.requestedBy?.toString() ?? "Unknown",
-              inline: true,
-            },
-            { name: "Duration", value: track.duration, inline: true },
-          ],
-          color: 0x1db954,
-        },
-      ],
-      components: [row],
-    } as MessageCreateOptions;
-
-    const msg = await channel.send(data);
-
-    nowPlayingMessage = msg;
-    nowPlayingData = data;
+    nowPlayingMessage = await channel.send(data as MessageCreateOptions);
   }
-  await setBotActivity(client, "EPIC boss music", ActivityType.Listening);
+
+  nowPlayingData = data;
+  await setBotActivity(
+    client,
+    BOT_STATUS.playing.name,
+    BOT_STATUS.playing.type
+  );
 });
 
-player.events.on("playerPause", async () => {
-  const row = new ActionRowBuilder<ButtonBuilder>();
-  row.addComponents(resumeButton, stopButton);
-
-  await nowPlayingMessage?.edit({
-    embeds: nowPlayingData?.embeds,
-    components: [row],
-  });
-  await setBotActivity(client, "Music paused", ActivityType.Custom);
+player.events.on("playerPause", async (queue) => {
+  await updateNowPlayingMessage(queue.currentTrack, false, nowPlayingMessage);
+  await setBotActivity(client, BOT_STATUS.paused.name, BOT_STATUS.paused.type);
 });
 
-player.events.on("playerResume", async () => {
-  const row = new ActionRowBuilder<ButtonBuilder>();
-  row.addComponents(pauseButton, stopButton);
-
-  await nowPlayingMessage?.edit({
-    embeds: nowPlayingData?.embeds,
-    components: [row],
-  });
-  await setBotActivity(client, "EPIC boss music", ActivityType.Listening);
+player.events.on("playerResume", async (queue) => {
+  await updateNowPlayingMessage(queue.currentTrack, true, nowPlayingMessage);
+  await setBotActivity(
+    client,
+    BOT_STATUS.playing.name,
+    BOT_STATUS.playing.type
+  );
 });
 
 player.events.on("queueDelete", async () => {
+  const embed = {
+    title: "Music stopped",
+    description: "Music stopped and queue cleared.\nDisconnecting...",
+    color: EMBED_COLORS.red,
+  };
+
+  await nowPlayingMessage?.edit({
+    embeds: [embed],
+    components: [],
+  });
+
   nowPlayingMessage = undefined;
   nowPlayingData = undefined;
-  await setBotActivity(client, "/play_boss_music", ActivityType.Listening);
+  await setBotActivity(client, BOT_STATUS.idle.name, BOT_STATUS.idle.type);
 });
