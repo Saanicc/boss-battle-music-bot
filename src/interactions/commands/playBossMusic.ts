@@ -59,7 +59,13 @@ export const execute = async (interaction: CommandInteraction) => {
       player,
       interaction.user
     );
-    queue.insertTrack(hornTracks[2]);
+
+    const pickRandomHornTrack = () => {
+      const number = Math.floor(Math.min(Math.random() * hornTracks.length));
+      return hornTracks[number];
+    };
+
+    queue.insertTrack(pickRandomHornTrack());
 
     if (!queue.connection) await queue.connect(channel);
 
