@@ -5,9 +5,9 @@ import {
   ButtonBuilder,
   MessageCreateOptions,
 } from "discord.js";
-import { pauseButton } from "../../interactions/buttons/pause";
+import { enemiesSlainedButton } from "../../interactions/buttons/enemiesSlained";
+import { slayEnemiesButton } from "../../interactions/buttons/slayEnemies";
 import { stopButton } from "../../interactions/buttons/stop";
-import { resumeButton } from "../../interactions/buttons/resume";
 import { EMBED_COLORS } from "../constants/constants";
 
 export const buildNowPlayingMessage = (
@@ -15,12 +15,12 @@ export const buildNowPlayingMessage = (
   isPlaying: boolean
 ): MessageCreateOptions => {
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    isPlaying ? pauseButton : resumeButton,
+    isPlaying ? enemiesSlainedButton : slayEnemiesButton,
     stopButton
   );
 
   const embed = {
-    title: isPlaying ? "Now Playing 🎶" : "Music paused",
+    title: isPlaying ? "Now Playing 🎶" : "Music stopped",
     description: `**${track.title}**`,
     fields: [
       {

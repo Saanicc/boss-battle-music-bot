@@ -1,22 +1,20 @@
-import { CommandInteraction, SlashCommandBuilder, User } from "discord.js";
-import { player } from "../../index";
-import { Track } from "discord-player";
+import {
+  ButtonInteraction,
+  CommandInteraction,
+  InteractionType,
+  SlashCommandBuilder,
+} from "discord.js";
+import { player, resetNowPlaying } from "../../index";
 import { getAllMusicFiles } from "../../utils/helpers/getAllMusicFiles";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
-
-const shuffleArray = (arr: Track[]) => {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-};
 
 export const data = new SlashCommandBuilder()
   .setName("play_boss_music")
   .setDescription("Start playing EPIC boss battle music!");
 
-export const execute = async (interaction: CommandInteraction) => {
+export const execute = async (
+  interaction: CommandInteraction | ButtonInteraction
+) => {
   const guildMember = await interaction.guild?.members.fetch(
     interaction.user.id
   );
@@ -32,49 +30,65 @@ export const execute = async (interaction: CommandInteraction) => {
     return;
   }
 
-  const playerNode = player.nodes.get(guildMember.guild);
-  if (playerNode) {
-    const data = buildEmbedMessage({
-      title: "Queue already exists!",
-      color: "orange",
-      description:
-        "A player queue already exists. If music is paused, please use the resume button instead.",
-      ephemeral: true,
-    });
-    interaction.reply(data);
-    return;
+  const guild = guildMember.guild;
+
+  if (interaction.type === InteractionType.ApplicationCommand) {
+    if (player.nodes.get(guild)) {
+      const data = buildEmbedMessage({
+        title: "A queue already exists!",
+        color: "orange",
+        description:
+          "A queue already exists. Please use one of the buttons in the previous reply instead.",
+        ephemeral: true,
+      });
+      interaction.reply(data);
+      return;
+    }
   }
+
+  await resetNowPlaying();
 
   try {
     const tracks = await getAllMusicFiles("music", player, interaction.user);
-
-    const queue = player.nodes.create(guildMember.guild, {
-      metadata: { channel: interaction.channel },
-    });
-
-    queue.addTrack(shuffleArray(tracks));
-
     const hornTracks = await getAllMusicFiles(
       "music/horns",
       player,
       interaction.user
     );
-
     const pickRandomHornTrack = () => {
-      const number = Math.floor(Math.min(Math.random() * hornTracks.length));
+      const number = Math.floor(Math.random() * hornTracks.length);
       return hornTracks[number];
     };
 
-    queue.insertTrack(pickRandomHornTrack());
+    let queue = player.nodes.get(guild);
+    const isNewQueue = !queue;
+
+    if (queue) {
+      queue.node.pause();
+      queue.tracks.clear();
+      queue.addTrack(tracks);
+      queue.tracks.shuffle();
+      queue.insertTrack(pickRandomHornTrack());
+    } else {
+      queue = player.nodes.create(guild, {
+        metadata: { channel: interaction.channel },
+      });
+      queue.addTrack(tracks);
+      queue.tracks.shuffle();
+      queue.insertTrack(pickRandomHornTrack());
+    }
 
     if (!queue.connection) await queue.connect(channel);
+    await queue.node.play();
 
-    if (!queue.isPlaying()) await queue.node.play();
-
-    const data = buildEmbedMessage({
-      title: `🎶 Shuffled and queued ${queue.tracks.size} tracks!`,
-    });
-    await interaction.reply(data);
+    if (isNewQueue) {
+      const data = buildEmbedMessage({
+        title: "⚔️ Have fun slaying enemies!",
+        description: `Loaded and shuffled ${queue.tracks.size} tracks!`,
+        color: "green",
+      });
+      await interaction.reply(data);
+    }
   } catch (err) {
     console.error(err);
     await interaction.reply("❌ Something went wrong while trying to play.");

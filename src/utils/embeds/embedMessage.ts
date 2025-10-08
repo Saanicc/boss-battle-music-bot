@@ -13,7 +13,7 @@ export const buildEmbedMessage = ({
   ephemeral?: boolean;
   description?: string;
 }) => {
-  const data = {
+  return {
     embeds: [
       {
         title,
@@ -21,8 +21,6 @@ export const buildEmbedMessage = ({
         color: color && EMBED_COLORS[color],
       },
     ],
-    flags: ephemeral && "Ephemeral",
+    flags: ephemeral ? "Ephemeral" : undefined,
   } as InteractionReplyOptions;
-
-  return data;
 };

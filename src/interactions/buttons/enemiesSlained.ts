@@ -1,9 +1,9 @@
 import { ButtonBuilder, ButtonInteraction, ButtonStyle } from "discord.js";
 import { useTimeline } from "discord-player";
 
-export const resumeButton = new ButtonBuilder()
-  .setCustomId("resume")
-  .setLabel("Resume")
+export const enemiesSlainedButton = new ButtonBuilder()
+  .setCustomId("enemies_slained")
+  .setLabel("Enemies slained")
   .setStyle(ButtonStyle.Primary);
 
 export const execute = async (interaction: ButtonInteraction) => {
@@ -23,6 +23,6 @@ export const execute = async (interaction: ButtonInteraction) => {
     );
   }
 
-  timeline.resume();
+  timeline.pause();
   interaction.deferUpdate();
 };

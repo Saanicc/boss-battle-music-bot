@@ -1,4 +1,5 @@
 import {
+  ActivityType,
   Client,
   GatewayIntentBits,
   Message,
@@ -10,15 +11,34 @@ import { deployCommands } from "./deploy-commands.js";
 import { commands } from "./interactions/commands/index.js";
 import { config } from "./config.js";
 import { setBotActivity } from "./utils/helpers/setBotActivity.js";
-import { Player, Track } from "discord-player";
+import { Player } from "discord-player";
 import { AttachmentExtractor } from "@discord-player/extractor";
 import { buttons } from "./interactions/buttons/index.js";
 import { buildNowPlayingMessage } from "./utils/embeds/nowPlayingMessage.js";
-import { BOT_STATUS, EMBED_COLORS } from "./utils/constants/constants.js";
+import { EMBED_COLORS } from "./utils/constants/constants.js";
 import { updateNowPlayingMessage } from "./utils/helpers/updateNowPlayingMessage.js";
+import { buildEmbedMessage } from "./utils/embeds/embedMessage.js";
 
 let nowPlayingMessage: Message | undefined;
 let nowPlayingData: MessageCreateOptions | MessageEditOptions | undefined;
+
+export const resetNowPlaying = async () => {
+  if (nowPlayingMessage) {
+    try {
+      const data = buildEmbedMessage({
+        title: "⚔️ A new battle has begun!",
+        description: `🔁 Reshuffling queue`,
+        color: "green",
+      });
+      await nowPlayingMessage.edit({ embeds: data.embeds, components: [] });
+    } catch (err) {
+      console.warn("Couldn't reset Now Playing message:", err);
+    }
+  }
+
+  nowPlayingMessage = undefined;
+  nowPlayingData = undefined;
+};
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
@@ -26,7 +46,7 @@ const client = new Client({
 
 client.once("clientReady", async () => {
   console.log(`🤖 Logged in as ${client.user?.tag}`);
-  await setBotActivity(client, BOT_STATUS.idle.name, BOT_STATUS.idle.type);
+  await setBotActivity(client, "/play_boss_music", ActivityType.Listening);
 });
 
 client.on("guildCreate", async (guild) => {
@@ -66,25 +86,14 @@ player.events.on("playerStart", async (queue, track) => {
   }
 
   nowPlayingData = data;
-  await setBotActivity(
-    client,
-    BOT_STATUS.playing.name,
-    BOT_STATUS.playing.type
-  );
 });
 
 player.events.on("playerPause", async (queue) => {
   await updateNowPlayingMessage(queue.currentTrack, false, nowPlayingMessage);
-  await setBotActivity(client, BOT_STATUS.paused.name, BOT_STATUS.paused.type);
 });
 
 player.events.on("playerResume", async (queue) => {
   await updateNowPlayingMessage(queue.currentTrack, true, nowPlayingMessage);
-  await setBotActivity(
-    client,
-    BOT_STATUS.playing.name,
-    BOT_STATUS.playing.type
-  );
 });
 
 player.events.on("queueDelete", async () => {
@@ -100,5 +109,4 @@ player.events.on("queueDelete", async () => {
 
   nowPlayingMessage = undefined;
   nowPlayingData = undefined;
-  await setBotActivity(client, BOT_STATUS.idle.name, BOT_STATUS.idle.type);
 });

@@ -1,9 +1,9 @@
-import * as resume from "./resume";
-import * as pause from "./pause";
 import * as stop from "./stop";
+import * as slayEnemies from "./slayEnemies";
+import * as enemiesSlained from "./enemiesSlained";
 
 export const buttons = {
-  resume,
-  pause,
+  slay_enemies: slayEnemies,
+  enemies_slained: enemiesSlained,
   stop,
 };
