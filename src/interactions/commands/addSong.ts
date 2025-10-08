@@ -55,11 +55,10 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
   fs.writeFileSync(savePath, buffer);
 
   const data = buildEmbedMessage({
-    title: "File upload",
-    description: `Successfully added **${file.name}** to the ${
-      type === "horn" ? "horn sound" : "music"
-    } library!`,
-    ephemeral: true,
+    title: "File upload success",
+    description: `${interaction.user.toString()} added **${
+      file.name
+    }** to the ${type === "horn" ? "horn sound" : "music"} library!`,
     color: "green",
   });
   await interaction.reply(data);
