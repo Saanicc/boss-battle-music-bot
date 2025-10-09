@@ -11,7 +11,7 @@ import { deployCommands } from "./deploy-commands.js";
 import { commands } from "./interactions/commands/index.js";
 import { config } from "./config.js";
 import { setBotActivity } from "./utils/helpers/setBotActivity.js";
-import { Player } from "discord-player";
+import { GuildQueueEvent, Player } from "discord-player";
 import { AttachmentExtractor } from "@discord-player/extractor";
 import { buttons } from "./interactions/buttons/index.js";
 import { buildNowPlayingMessage } from "./utils/embeds/nowPlayingMessage.js";
@@ -74,7 +74,7 @@ client.login(config.DISCORD_TOKEN);
 export const player = new Player(client);
 player.extractors.register(AttachmentExtractor, {});
 
-player.events.on("playerStart", async (queue, track) => {
+player.events.on(GuildQueueEvent.PlayerStart, async (queue, track) => {
   const channel = queue.metadata.channel as TextChannel;
   const data = buildNowPlayingMessage(track, true);
 
@@ -88,15 +88,11 @@ player.events.on("playerStart", async (queue, track) => {
   nowPlayingData = data;
 });
 
-player.events.on("playerPause", async (queue) => {
+player.events.on(GuildQueueEvent.PlayerPause, async (queue) => {
   await updateNowPlayingMessage(queue.currentTrack, false, nowPlayingMessage);
 });
 
-player.events.on("playerResume", async (queue) => {
-  await updateNowPlayingMessage(queue.currentTrack, true, nowPlayingMessage);
-});
-
-player.events.on("queueDelete", async () => {
+player.events.on(GuildQueueEvent.QueueDelete, async () => {
   const embed = {
     title: "Left the voice channel",
     color: EMBED_COLORS.red,
