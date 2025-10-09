@@ -66,6 +66,7 @@ export const execute = async (
     if (queue) {
       queue.node.pause();
       queue.tracks.clear();
+      queue.history.clear();
       queue.addTrack(tracks);
       queue.tracks.shuffle();
       queue.insertTrack(pickRandomHornTrack());

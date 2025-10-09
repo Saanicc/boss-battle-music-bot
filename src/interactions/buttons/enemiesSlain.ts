@@ -1,9 +1,9 @@
 import { ButtonBuilder, ButtonInteraction, ButtonStyle } from "discord.js";
 import { useTimeline } from "discord-player";
 
-export const enemiesSlainedButton = new ButtonBuilder()
-  .setCustomId("enemies_slained")
-  .setLabel("Enemies slained")
+export const enemiesSlainButton = new ButtonBuilder()
+  .setCustomId("enemies_slain")
+  .setLabel("Enemies slain")
   .setStyle(ButtonStyle.Primary);
 
 export const execute = async (interaction: ButtonInteraction) => {

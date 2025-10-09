@@ -1,9 +1,9 @@
 import * as stop from "./stop";
 import * as slayEnemies from "./slayEnemies";
-import * as enemiesSlained from "./enemiesSlained";
+import * as enemiesSlain from "./enemiesSlain";
 
 export const buttons = {
   slay_enemies: slayEnemies,
-  enemies_slained: enemiesSlained,
+  enemies_slain: enemiesSlain,
   stop,
 };

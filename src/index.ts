@@ -21,6 +21,7 @@ import { buildEmbedMessage } from "./utils/embeds/embedMessage.js";
 
 let nowPlayingMessage: Message | undefined;
 let nowPlayingData: MessageCreateOptions | MessageEditOptions | undefined;
+let progressInterval: NodeJS.Timeout | null = null;
 
 export const resetNowPlaying = async () => {
   if (nowPlayingMessage) {
@@ -76,7 +77,9 @@ player.extractors.register(AttachmentExtractor, {});
 
 player.events.on(GuildQueueEvent.PlayerStart, async (queue, track) => {
   const channel = queue.metadata.channel as TextChannel;
-  const data = buildNowPlayingMessage(track, true);
+  const data = buildNowPlayingMessage(track, true, queue);
+
+  if (progressInterval) clearInterval(progressInterval);
 
   if (nowPlayingMessage) {
     await nowPlayingMessage.edit(data as MessageEditOptions);
@@ -86,6 +89,17 @@ player.events.on(GuildQueueEvent.PlayerStart, async (queue, track) => {
   }
 
   nowPlayingData = data;
+
+  progressInterval = setInterval(async () => {
+    if (!queue.node.isPlaying()) return;
+
+    const updateData = buildNowPlayingMessage(track, true, queue);
+    try {
+      await nowPlayingMessage?.edit(updateData as MessageEditOptions);
+    } catch (err) {
+      console.error("Failed to update progress:", err);
+    }
+  }, 1000);
 });
 
 player.events.on(GuildQueueEvent.PlayerPause, async (queue) => {
