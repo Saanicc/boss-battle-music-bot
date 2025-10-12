@@ -7,6 +7,7 @@ export const enemiesSlainButton = new ButtonBuilder()
   .setStyle(ButtonStyle.Primary);
 
 export const execute = async (interaction: ButtonInteraction) => {
+  interaction.deferUpdate();
   const { guild } = interaction;
   if (!guild) {
     await interaction.reply("⚠️ No guild was found.");
@@ -15,12 +16,9 @@ export const execute = async (interaction: ButtonInteraction) => {
 
   const queue = player.nodes.get(guild);
 
-  if (!queue) {
-    return interaction.reply("Could not find an active queue.");
-  }
+  if (!queue) return;
 
+  queue.node.pause();
   queue.history.clear();
   queue.tracks.clear();
-  queue.clear();
-  queue.emit("emptyQueue", queue);
 };

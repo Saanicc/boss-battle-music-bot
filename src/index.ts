@@ -2,7 +2,6 @@ import {
   ActivityType,
   Client,
   GatewayIntentBits,
-  Message,
   MessageCreateOptions,
   MessageEditOptions,
   TextChannel,
@@ -15,14 +14,10 @@ import { GuildQueueEvent, Player } from "discord-player";
 import { AttachmentExtractor } from "@discord-player/extractor";
 import { buttons } from "./interactions/buttons/index.js";
 import { buildNowPlayingMessage } from "./utils/embeds/nowPlayingMessage.js";
-import { updateNowPlayingMessage } from "./utils/helpers/updateNowPlayingMessage.js";
-import { buildEmbedMessage } from "./utils/embeds/embedMessage.js";
 import { SoundcloudExtractor } from "discord-player-soundcloud";
 import { SpotifyExtractor } from "discord-player-spotify";
-import { queueManager } from "./utils/queueManager.js";
-
-let nowPlayingMessage: Message | undefined;
-let progressInterval: NodeJS.Timeout | null = null;
+import { musicPlayerMessage } from "./services/musicPlayerMesssage.js";
+import { buildEmbedMessage } from "./utils/embeds/embedMessage.js";
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
@@ -61,87 +56,50 @@ const registerExtractors = async () => {
   await player.extractors.loadMulti([SoundcloudExtractor, SpotifyExtractor]);
   await player.extractors.register(AttachmentExtractor, {});
 };
-
 registerExtractors().catch(console.error);
 
 player.events.on(GuildQueueEvent.PlayerStart, async (queue, track) => {
   const channel = queue.metadata.channel as TextChannel;
-  const queueType = queueManager.getQueueType();
 
-  const data = buildNowPlayingMessage(track, true, queueType, queue);
+  const data = buildNowPlayingMessage(track, true, queue);
 
-  if (progressInterval) clearInterval(progressInterval);
+  musicPlayerMessage.clearProgressInterval();
+  musicPlayerMessage.delete();
 
-  await nowPlayingMessage?.delete();
+  const msg = await channel.send(data as MessageCreateOptions);
+  musicPlayerMessage.set(msg);
 
-  nowPlayingMessage = await channel.send(data as MessageCreateOptions);
+  musicPlayerMessage.setProgressInterval(
+    setInterval(async () => {
+      if (!queue.node.isPlaying()) return;
 
-  progressInterval = setInterval(async () => {
-    if (!queue.node.isPlaying()) return;
-
-    const updateData = buildNowPlayingMessage(track, true, queueType, queue);
-    try {
-      await nowPlayingMessage?.edit(updateData as MessageEditOptions);
-    } catch (err) {
-      console.error("Failed to update progress:", err);
-    }
-  }, 1000);
+      const updateData = buildNowPlayingMessage(track, true, queue);
+      try {
+        await musicPlayerMessage.edit(updateData as MessageEditOptions);
+      } catch (err) {
+        console.error("Failed to update progress:", err);
+      }
+    }, 1000)
+  );
 });
 
 player.events.on(GuildQueueEvent.PlayerPause, async (queue) => {
-  await updateNowPlayingMessage(queue.currentTrack, false, nowPlayingMessage);
-});
+  if (!queue.currentTrack) return;
 
-player.events.on(GuildQueueEvent.EmptyQueue, async (queue) => {
-  const guildId = queue.guild.id;
-  const stored = queueManager.retrieve(guildId);
+  const data = buildNowPlayingMessage(queue.currentTrack, false, queue);
 
-  if (!stored) {
-    queue.delete();
-    return;
-  }
-
-  const voiceChannel = queue.metadata.voiceChannel;
-  if (!voiceChannel || !voiceChannel.isVoiceBased()) {
-    console.warn(`No valid voice channel to restore queue for ${guildId}.`);
-    return;
-  }
-
-  const newQueue = player.nodes.create(queue.guild, {
-    metadata: queue.metadata,
-  });
-
-  if (!stored.currentTrack) return;
-
-  newQueue.addTrack(stored.currentTrack);
-
-  for (const track of stored.tracks) {
-    newQueue.addTrack(track);
-  }
-
-  queueManager.setQueueType("normal");
-
-  await newQueue.connect(voiceChannel);
-  await newQueue.node.play();
-
-  queueManager.clear(guildId);
+  await musicPlayerMessage.edit(data as MessageEditOptions);
 });
 
 player.events.on(GuildQueueEvent.QueueDelete, async (queue) => {
-  queueManager.setQueueType("normal");
-
-  const channel = queue.metadata.channel;
-
-  if (!channel) return;
-
-  await nowPlayingMessage?.delete();
+  await musicPlayerMessage.delete();
+  musicPlayerMessage.set(undefined);
 
   const data = buildEmbedMessage({
     title: "Left the voice channel",
     color: "red",
   });
 
-  await channel.send(data);
-
-  nowPlayingMessage = undefined;
+  const channel = queue.metadata.channel;
+  await channel.send(data as MessageCreateOptions);
 });

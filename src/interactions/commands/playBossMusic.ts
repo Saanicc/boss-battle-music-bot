@@ -6,7 +6,6 @@ import {
 import { player } from "../../index";
 import { getAllMusicFiles } from "../../utils/helpers/getAllMusicFiles";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
-import { queueManager } from "../../utils/queueManager";
 import { getRandomFightGif } from "../../utils/helpers/getRandomFightingGif";
 
 export const data = new SlashCommandBuilder()
@@ -32,24 +31,12 @@ export const execute = async (
   }
 
   const guild = guildMember.guild;
-
-  let queue = player.nodes.get(guild);
-
-  if (queue && queue.tracks.size > 0) {
-    queueManager.store(
-      guild.id,
-      [...queue.tracks.data],
-      queue.currentTrack ?? undefined
-    );
-
-    queue.history.clear();
-    queue.tracks.clear();
-    queue.clear();
-  } else {
-    queue = player.nodes.create(guild, {
-      metadata: { channel: interaction.channel, voiceChannel: channel },
-    });
-  }
+  let newQueue = player.nodes.create(guild, {
+    metadata: {
+      channel: interaction.channel,
+      voiceChannel: channel,
+    },
+  });
 
   try {
     const tracks = await getAllMusicFiles("music", player, interaction.user);
@@ -63,14 +50,12 @@ export const execute = async (
       return hornTracks[number];
     };
 
-    queue.addTrack(tracks);
-    queue.tracks.shuffle();
-    queue.insertTrack(pickRandomHornTrack());
+    newQueue.addTrack(tracks);
+    newQueue.tracks.shuffle();
+    newQueue.insertTrack(pickRandomHornTrack());
 
-    if (!queue.connection) await queue.connect(channel);
-    await queue.node.play();
-
-    queueManager.setQueueType("boss");
+    if (!newQueue.connection) await newQueue.connect(channel);
+    await newQueue.node.play();
 
     const data = buildEmbedMessage({
       title: "⚔️ Time to slay some enemies!",
