@@ -7,11 +7,13 @@ export const buildEmbedMessage = ({
   color,
   ephemeral,
   description,
+  imageUrl,
 }: {
   title: string;
   color?: Color;
   ephemeral?: boolean;
   description?: string;
+  imageUrl?: string;
 }) => {
   return {
     embeds: [
@@ -19,6 +21,11 @@ export const buildEmbedMessage = ({
         title,
         description: description && description,
         color: color && EMBED_COLORS[color],
+        ...(imageUrl && {
+          image: {
+            url: imageUrl,
+          },
+        }),
       },
     ],
     flags: ephemeral ? "Ephemeral" : undefined,

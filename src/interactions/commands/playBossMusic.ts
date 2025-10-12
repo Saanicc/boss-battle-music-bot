@@ -1,12 +1,13 @@
 import {
   ButtonInteraction,
   CommandInteraction,
-  InteractionType,
   SlashCommandBuilder,
 } from "discord.js";
-import { player, resetNowPlaying } from "../../index";
+import { player } from "../../index";
 import { getAllMusicFiles } from "../../utils/helpers/getAllMusicFiles";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
+import { queueManager } from "../../utils/queueManager";
+import { getRandomFightGif } from "../../utils/helpers/getRandomFightingGif";
 
 export const data = new SlashCommandBuilder()
   .setName("play_boss_music")
@@ -32,21 +33,23 @@ export const execute = async (
 
   const guild = guildMember.guild;
 
-  if (interaction.type === InteractionType.ApplicationCommand) {
-    if (player.nodes.get(guild)) {
-      const data = buildEmbedMessage({
-        title: "A queue already exists!",
-        color: "orange",
-        description:
-          "A queue already exists. Please use one of the buttons in the previous reply instead.",
-        ephemeral: true,
-      });
-      interaction.reply(data);
-      return;
-    }
-  }
+  let queue = player.nodes.get(guild);
 
-  await resetNowPlaying();
+  if (queue && queue.tracks.size > 0) {
+    queueManager.store(
+      guild.id,
+      [...queue.tracks.data],
+      queue.currentTrack ?? undefined
+    );
+
+    queue.history.clear();
+    queue.tracks.clear();
+    queue.clear();
+  } else {
+    queue = player.nodes.create(guild, {
+      metadata: { channel: interaction.channel, voiceChannel: channel },
+    });
+  }
 
   try {
     const tracks = await getAllMusicFiles("music", player, interaction.user);
@@ -60,36 +63,23 @@ export const execute = async (
       return hornTracks[number];
     };
 
-    let queue = player.nodes.get(guild);
-    const isNewQueue = !queue;
-
-    if (queue) {
-      queue.node.pause();
-      queue.tracks.clear();
-      queue.history.clear();
-      queue.addTrack(tracks);
-      queue.tracks.shuffle();
-      queue.insertTrack(pickRandomHornTrack());
-    } else {
-      queue = player.nodes.create(guild, {
-        metadata: { channel: interaction.channel },
-      });
-      queue.addTrack(tracks);
-      queue.tracks.shuffle();
-      queue.insertTrack(pickRandomHornTrack());
-    }
+    queue.addTrack(tracks);
+    queue.tracks.shuffle();
+    queue.insertTrack(pickRandomHornTrack());
 
     if (!queue.connection) await queue.connect(channel);
     await queue.node.play();
 
-    if (isNewQueue) {
-      const data = buildEmbedMessage({
-        title: "⚔️ Have fun slaying enemies!",
-        description: `Loaded and shuffled ${queue.tracks.size} tracks!`,
-        color: "green",
-      });
-      await interaction.reply(data);
-    }
+    queueManager.setQueueType("boss");
+
+    const data = buildEmbedMessage({
+      title: "⚔️ Time to slay some enemies!",
+      imageUrl: await getRandomFightGif(),
+      color: "green",
+    });
+    if (!interaction.channel) return;
+
+    await interaction.reply(data);
   } catch (err) {
     console.error(err);
     await interaction.reply("❌ Something went wrong while trying to play.");

@@ -2,6 +2,8 @@ import { User } from "discord.js";
 import path from "path";
 import fs from "fs";
 import { Player, QueryType, Track } from "discord-player";
+import { SoundcloudExtractor } from "discord-player-soundcloud";
+import { SpotifyExtractor } from "discord-player-spotify";
 
 export const getAllMusicFiles = async (
   searchPath: string,
@@ -27,6 +29,10 @@ export const getAllMusicFiles = async (
     const result = await player.search(filePath, {
       requestedBy,
       searchEngine: QueryType.FILE,
+      blockExtractors: [
+        SoundcloudExtractor.identifier,
+        SpotifyExtractor.identifier,
+      ],
     });
     if (result.hasTracks()) {
       tracks.push(result.tracks[0]);

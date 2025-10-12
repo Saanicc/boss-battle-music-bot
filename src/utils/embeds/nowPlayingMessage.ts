@@ -9,6 +9,7 @@ import { enemiesSlainButton } from "../../interactions/buttons/enemiesSlain";
 import { slayEnemiesButton } from "../../interactions/buttons/slayEnemies";
 import { stopButton } from "../../interactions/buttons/stop";
 import { EMBED_COLORS } from "../constants/constants";
+import { QueueType } from "../queueManager";
 
 const createProgressBar = (queue: GuildQueue, size = 20): string => {
   const progress = queue.node.getTimestamp();
@@ -27,10 +28,11 @@ const createProgressBar = (queue: GuildQueue, size = 20): string => {
 export const buildNowPlayingMessage = (
   track: Track,
   isPlaying: boolean,
+  queueType: QueueType,
   queue?: GuildQueue
 ): MessageCreateOptions => {
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    isPlaying ? enemiesSlainButton : slayEnemiesButton,
+    isPlaying && queueType === "boss" ? enemiesSlainButton : slayEnemiesButton,
     stopButton
   );
 

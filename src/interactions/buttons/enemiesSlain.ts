@@ -1,5 +1,5 @@
 import { ButtonBuilder, ButtonInteraction, ButtonStyle } from "discord.js";
-import { useTimeline } from "discord-player";
+import { player } from "../..";
 
 export const enemiesSlainButton = new ButtonBuilder()
   .setCustomId("enemies_slain")
@@ -13,16 +13,14 @@ export const execute = async (interaction: ButtonInteraction) => {
     return;
   }
 
-  const timeline = useTimeline({
-    node: guild,
-  });
+  const queue = player.nodes.get(guild);
 
-  if (!timeline) {
-    return interaction.reply(
-      "This server does not have an active player session."
-    );
+  if (!queue) {
+    return interaction.reply("Could not find an active queue.");
   }
 
-  timeline.pause();
-  interaction.deferUpdate();
+  queue.history.clear();
+  queue.tracks.clear();
+  queue.clear();
+  queue.emit("emptyQueue", queue);
 };
