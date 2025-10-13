@@ -53,7 +53,12 @@ client.login(config.DISCORD_TOKEN);
 export const player = new Player(client);
 
 const registerExtractors = async () => {
-  await player.extractors.loadMulti([SoundcloudExtractor, SpotifyExtractor]);
+  await player.extractors.register(SpotifyExtractor, {
+    clientId: config.SPOTIFY_CLIENT_ID,
+    clientSecret: config.SPOTIFY_CLIENT_SECRET,
+    market: "SE",
+  });
+  await player.extractors.register(SoundcloudExtractor, {});
   await player.extractors.register(AttachmentExtractor, {});
 };
 registerExtractors().catch(console.error);

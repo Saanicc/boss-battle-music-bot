@@ -45,13 +45,18 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
       return interaction.reply(data);
     }
 
-    normalQueue.addTrack(result.tracks[0]);
+    const track = result.tracks[0];
+    normalQueue.addTrack(track);
 
     if (!normalQueue.connection) await normalQueue.connect(channel);
     if (!normalQueue.isPlaying()) await normalQueue.node.play();
 
     const data = buildEmbedMessage({
-      title: `🎵 Added **${result.tracks[0].title}** to the queue.`,
+      title: `Queued at position #${normalQueue.tracks.size + 1}`,
+      description: `[${track.title}](${track.url}) by ${track.author} [${track.duration}]`,
+      thumbnail: result.tracks[0].thumbnail,
+      footerText: "Not the correct track? Try being more specific",
+      color: "green",
     });
     interaction.reply(data);
   } catch (error) {

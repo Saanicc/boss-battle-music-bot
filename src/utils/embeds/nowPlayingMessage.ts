@@ -3,6 +3,7 @@ import {
   ActionRowBuilder,
   APIEmbed,
   ButtonBuilder,
+  EmbedType,
   MessageCreateOptions,
 } from "discord.js";
 import { enemiesSlainButton } from "../../interactions/buttons/enemiesSlain";
@@ -46,19 +47,9 @@ export const buildNowPlayingMessage = (
   const totalTime = timestamp?.total?.label ?? track.duration;
 
   const embed = {
-    title: isPlaying ? "🎶 Now Playing" : "🛑 Music Stopped",
-    description: `**${track.title}**`,
+    title: isPlaying ? "⏵ Now Playing" : "⏸ Music Stopped",
+    description: `[${track.title}](${track.url}) by ${track.author}`,
     fields: [
-      {
-        name: "Requested by",
-        value: track.requestedBy?.toString() ?? "Unknown",
-        inline: true,
-      },
-      {
-        name: "Duration",
-        value: track.duration,
-        inline: true,
-      },
       ...(queue
         ? [
             {
@@ -74,8 +65,16 @@ export const buildNowPlayingMessage = (
             },
           ]
         : []),
+      {
+        name: "Requested by",
+        value: track.requestedBy?.toString() ?? "Unknown",
+        inline: true,
+      },
     ],
-    color: isPlaying ? EMBED_COLORS.green : EMBED_COLORS.red,
+    thumbnail: {
+      url: track.thumbnail,
+    },
+    color: isPlaying ? EMBED_COLORS.green : undefined,
   } as APIEmbed;
 
   return {

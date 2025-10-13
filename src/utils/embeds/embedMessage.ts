@@ -8,12 +8,16 @@ export const buildEmbedMessage = ({
   ephemeral,
   description,
   imageUrl,
+  thumbnail,
+  footerText,
 }: {
   title: string;
   color?: Color;
   ephemeral?: boolean;
   description?: string;
   imageUrl?: string;
+  thumbnail?: string;
+  footerText?: string;
 }) => {
   return {
     embeds: [
@@ -24,6 +28,16 @@ export const buildEmbedMessage = ({
         ...(imageUrl && {
           image: {
             url: imageUrl,
+          },
+        }),
+        ...(thumbnail && {
+          thumbnail: {
+            url: thumbnail,
+          },
+        }),
+        ...(footerText && {
+          footer: {
+            text: footerText,
           },
         }),
       },
