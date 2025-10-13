@@ -10,6 +10,8 @@ import { slayEnemiesButton } from "../../interactions/buttons/slayEnemies";
 import { stopButton } from "../../interactions/buttons/stop";
 import { EMBED_COLORS } from "../constants/constants";
 import { queueManager } from "../../services/queueManager";
+import { pauseButton } from "../../interactions/buttons/pause";
+import { resumeButton } from "../../interactions/buttons/resume";
 
 const createProgressBar = (queue: GuildQueue, size = 20): string => {
   const progress = queue.node.getTimestamp();
@@ -31,7 +33,8 @@ export const buildNowPlayingMessage = (
   queue?: GuildQueue
 ): MessageCreateOptions => {
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    isPlaying && queueManager.getQueueType() === "boss"
+    isPlaying ? pauseButton : resumeButton,
+    (isPlaying || !isPlaying) && queueManager.getQueueType() === "boss"
       ? enemiesSlainButton
       : slayEnemiesButton,
     stopButton

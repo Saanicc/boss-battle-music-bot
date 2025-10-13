@@ -16,7 +16,7 @@ import { buttons } from "./interactions/buttons/index.js";
 import { buildNowPlayingMessage } from "./utils/embeds/nowPlayingMessage.js";
 import { SoundcloudExtractor } from "discord-player-soundcloud";
 import { SpotifyExtractor } from "discord-player-spotify";
-import { musicPlayerMessage } from "./services/musicPlayerMesssage.js";
+import { musicPlayerMessage } from "./services/musicPlayerMessage.js";
 import { buildEmbedMessage } from "./utils/embeds/embedMessage.js";
 
 const client = new Client({

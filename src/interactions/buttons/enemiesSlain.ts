@@ -6,8 +6,8 @@ import { delay } from "../../utils/helpers/utils";
 
 export const enemiesSlainButton = new ButtonBuilder()
   .setCustomId("enemies_slain")
-  .setLabel("Enemies slain")
-  .setStyle(ButtonStyle.Primary);
+  .setLabel("🏆")
+  .setStyle(ButtonStyle.Secondary);
 
 export const execute = async (interaction: ButtonInteraction) => {
   await interaction.deferUpdate();

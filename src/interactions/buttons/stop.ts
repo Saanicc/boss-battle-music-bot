@@ -3,7 +3,7 @@ import { player } from "../../index";
 
 export const stopButton = new ButtonBuilder()
   .setCustomId("stop")
-  .setLabel("Stop")
+  .setLabel("⏹")
   .setStyle(ButtonStyle.Danger);
 
 export const execute = async (interaction: ButtonInteraction) => {

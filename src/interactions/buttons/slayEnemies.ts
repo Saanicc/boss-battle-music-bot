@@ -3,8 +3,8 @@ import { execute as slayEnemies } from "../commands/playBossMusic";
 
 export const slayEnemiesButton = new ButtonBuilder()
   .setCustomId("slay_enemies")
-  .setLabel("Slay enemies")
-  .setStyle(ButtonStyle.Primary);
+  .setLabel("⚔️")
+  .setStyle(ButtonStyle.Secondary);
 
 export const execute = async (interaction: ButtonInteraction) => {
   const { guild } = interaction;
