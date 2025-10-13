@@ -1,6 +1,7 @@
 import {
   ButtonInteraction,
   CommandInteraction,
+  InteractionType,
   MessageCreateOptions,
   SlashCommandBuilder,
   TextChannel,
@@ -10,6 +11,7 @@ import { getAllMusicFiles } from "../../utils/helpers/getAllMusicFiles";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
 import { getRandomFightGif } from "../../utils/helpers/getRandomFightingGif";
 import { queueManager } from "../../services/queueManager";
+import { savePreviousQueueDataAndDeleteQueue } from "../../utils/helpers/saveQueueData";
 
 export const data = new SlashCommandBuilder()
   .setName("play_boss_music")
@@ -34,6 +36,9 @@ export const execute = async (
   }
 
   const guild = guildMember.guild;
+
+  await savePreviousQueueDataAndDeleteQueue(guild);
+
   let newQueue = player.nodes.create(guild, {
     metadata: {
       channel: interaction.channel,
@@ -69,9 +74,13 @@ export const execute = async (
 
     queueManager.setQueueType("boss");
 
-    await (interaction.channel as TextChannel).send(
-      data as MessageCreateOptions
-    );
+    if (interaction.type === InteractionType.ApplicationCommand) {
+      await interaction.reply(data);
+    } else {
+      await (interaction.channel as TextChannel).send(
+        data as MessageCreateOptions
+      );
+    }
   } catch (err) {
     console.error(err);
     await interaction.reply("❌ Something went wrong while trying to play.");

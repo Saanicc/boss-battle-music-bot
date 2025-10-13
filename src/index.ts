@@ -64,7 +64,7 @@ player.events.on(GuildQueueEvent.PlayerStart, async (queue, track) => {
   const data = buildNowPlayingMessage(track, true, queue);
 
   musicPlayerMessage.clearProgressInterval();
-  musicPlayerMessage.delete();
+  await musicPlayerMessage.delete();
 
   const msg = await channel.send(data as MessageCreateOptions);
   musicPlayerMessage.set(msg);
