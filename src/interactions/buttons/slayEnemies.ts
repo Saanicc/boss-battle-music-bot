@@ -28,15 +28,9 @@ export const execute = async (interaction: ButtonInteraction) => {
 
     const voiceChannel = (queue.metadata as any).voiceChannel;
 
-    const allTracks = [...queue.tracks.data];
-
-    const filteredTracks = allTracks.filter(
-      (t) => t.url !== queue.currentTrack?.url
-    );
-
     queueManager.store(
       guild.id,
-      filteredTracks,
+      [...queue.tracks.data],
       "normal",
       queue.currentTrack ?? undefined,
       progress,
@@ -50,8 +44,6 @@ export const execute = async (interaction: ButtonInteraction) => {
 
   if (queue) {
     queue.node.pause();
-    queue.history.clear();
-    queue.tracks.clear();
     (queue.metadata as any).isSwithing = true;
     await delay(500);
     queue.delete();

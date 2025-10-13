@@ -22,8 +22,6 @@ export const execute = async (interaction: ButtonInteraction) => {
   if (!queue) return;
 
   queue.node.pause();
-  queue.history.clear();
-  queue.tracks.clear();
   (queue.metadata as any).isSwithing = true;
   await delay(500);
   queue.delete();
