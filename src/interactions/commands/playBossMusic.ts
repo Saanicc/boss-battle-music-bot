@@ -1,12 +1,15 @@
 import {
   ButtonInteraction,
   CommandInteraction,
+  MessageCreateOptions,
   SlashCommandBuilder,
+  TextChannel,
 } from "discord.js";
 import { player } from "../../index";
 import { getAllMusicFiles } from "../../utils/helpers/getAllMusicFiles";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
 import { getRandomFightGif } from "../../utils/helpers/getRandomFightingGif";
+import { queueManager } from "../../services/queueManager";
 
 export const data = new SlashCommandBuilder()
   .setName("play_boss_music")
@@ -64,7 +67,11 @@ export const execute = async (
     });
     if (!interaction.channel) return;
 
-    await interaction.reply(data);
+    queueManager.setQueueType("boss");
+
+    await (interaction.channel as TextChannel).send(
+      data as MessageCreateOptions
+    );
   } catch (err) {
     console.error(err);
     await interaction.reply("❌ Something went wrong while trying to play.");

@@ -92,6 +92,8 @@ player.events.on(GuildQueueEvent.PlayerPause, async (queue) => {
 });
 
 player.events.on(GuildQueueEvent.QueueDelete, async (queue) => {
+  if (queue.metadata.isSwithing) return;
+
   await musicPlayerMessage.delete();
   musicPlayerMessage.set(undefined);
 
