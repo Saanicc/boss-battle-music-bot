@@ -25,7 +25,7 @@ const client = new Client({
 
 client.once("clientReady", async () => {
   console.log(`🤖 Logged in as ${client.user?.tag}`);
-  await setBotActivity(client, "/play_boss_music", ActivityType.Listening);
+  await setBotActivity(client, "/help", ActivityType.Listening);
 });
 
 client.on("guildCreate", async (guild) => {

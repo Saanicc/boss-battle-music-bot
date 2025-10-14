@@ -40,9 +40,11 @@ export const queueManager = {
     storedQueues.delete(guildId);
     this.setQueueType("normal");
   },
+
   setQueueType(type: QueueType) {
     queueType = type;
   },
+
   getQueueType() {
     return queueType;
   },
