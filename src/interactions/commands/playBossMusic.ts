@@ -1,10 +1,7 @@
 import {
   ButtonInteraction,
   CommandInteraction,
-  InteractionType,
-  MessageCreateOptions,
   SlashCommandBuilder,
-  TextChannel,
 } from "discord.js";
 import { player } from "../../index";
 import { getAllMusicFiles } from "../../utils/helpers/getAllMusicFiles";
@@ -13,7 +10,6 @@ import { getRandomFightGif } from "../../utils/helpers/getRandomFightingGif";
 import { queueManager } from "../../services/queueManager";
 import { savePreviousQueue } from "../../utils/helpers/saveQueueData";
 import { getBossTracks } from "../../utils/helpers/getBossTracks";
-import { delay } from "../../utils/helpers/utils";
 
 export const data = new SlashCommandBuilder()
   .setName("play_boss_music")
@@ -33,7 +29,7 @@ export const execute = async (
       color: "error",
       ephemeral: true,
     });
-    await interaction.followUp(data);
+    await interaction.reply(data);
     return;
   }
 
