@@ -1,19 +1,23 @@
-# ⚔️ Boss Battle Music
+# Gaming music bot
 
-**Boss Battle Music** is a Discord bot designed to enhance your gaming sessions.  
-When you and your friends encounter tough enemies or boss fights, summon the bot to unleash an epic soundtrack and fuel your victory. 🎶🔥
+**Gaming Music Bot** is a Discord bot that brings dynamic soundtracks to your gaming sessions.
+Whether you’re relaxing with background music or preparing for an epic boss fight, this bot delivers the perfect vibe.
+Summon it anytime to power up your gameplay with cinematic, high-energy music. 🎮🎵
 
 ---
 
 ## ✨ Features
 
-- 🎵 **Play boss music** from your local collection
-- 🔀 **Shuffles and reshuffles** tracks automatically
+- 🎵 **Play boss music** from your pre-curated collection
+- 🔀 **Shuffles and reshuffles** boss tracks automatically
 - 📊 **Dynamic "Now Playing" embed** with:
+  - Song name
+  - Artist
+  - Album art
   - Progress bar
   - Track number and duration
   - Requester tag
-- ⏯️ **Interactive buttons** — Slay enemies (Play), Enemies slain (Pause), or Stop
+- ⏯️ **Interactive buttons** — Pause, Resume, Fight, Victory and Stop
 - 📡 **Auto updates** current song info every second
 - 💬 Clean, responsive embeds for a sleek experience
 
@@ -23,9 +27,10 @@ When you and your friends encounter tough enemies or boss fights, summon the bot
 
 | Command            | Description                                    |
 | ------------------ | ---------------------------------------------- |
-| `/play_boss_music` | Loads and shuffles all boss tracks             |
-| `/add_song`        | Add new music or horn sounds to the collection |
-| `/stop`            | Stops playback and leaves the voice channel    |
+| `/play` | Play a track from name or URL |
+| `/play_boss_music` | Loads, shuffles and plays all boss tracks             |
+| `/add_track`        | Add new track to the boss music collection |
+| `/help`            | Shows info about available commands   |
 
 ---
 
@@ -33,8 +38,10 @@ When you and your friends encounter tough enemies or boss fights, summon the bot
 
 | Button            | Action                                      |
 | ----------------- | ------------------------------------------- |
-| **Enemies slain** | Pauses music playback                       |
-| **Slay enemies**  | Reloads and shuffles all songs              |
+| **Pause** | Pauses music playback                       |
+| **Resume** | Resume music playback |
+| **Fight**  | Reloads and shuffles all boss tracks              |
+| **Victory** | Resumes old music queue if available, if not available it stops playback and leaves voice channel |
 | **Stop**          | Stops playback and leaves the voice channel |
 
 ---
@@ -61,6 +68,8 @@ Create a .env file in the root folder:
 ```
 DISCORD_TOKEN=your-bot-token
 CLIENT_ID=your-client-id
+SPOTIFY_CLIENT_ID=your-spotify-client-id
+SPOTIFY_CLIENT_SECRET=your-spotify-client-secret
 ```
 
 ### 4. Run the bot
@@ -96,7 +105,7 @@ When you’re facing a boss or epic challenge in-game:
 /play_boss_music
 ```
 
-The bot joins your voice channel and blasts a randomized selection of your best tracks.  
+The bot joins your voice channel and blasts a shuffled selection of your boss music collection.  
 You’ll see a Now Playing embed with progress bar and interactive buttons.
 
 ## 🧠 Technical Notes
