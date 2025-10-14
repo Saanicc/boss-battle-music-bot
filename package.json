@@ -21,8 +21,8 @@
     "discord-player": "^7.1.0",
     "discord-player-soundcloud": "^1.0.7",
     "discord-player-spotify": "^1.1.7",
-    "discord.js": "^14.22.1",
-    "dotenv": "^16.0.3",
+    "discord.js": "^14.23.2",
+    "dotenv": "^17.2.3",
     "mediaplex": "^1.0.0"
   },
   "devDependencies": {

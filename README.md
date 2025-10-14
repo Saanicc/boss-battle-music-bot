@@ -25,24 +25,24 @@ Summon it anytime to power up your gameplay with cinematic, high-energy music. �
 
 ## 🧩 Commands
 
-| Command            | Description                                    |
-| ------------------ | ---------------------------------------------- |
-| `/play` | Play a track from name or URL |
-| `/play_boss_music` | Loads, shuffles and plays all boss tracks             |
-| `/add_track`        | Add new track to the boss music collection |
-| `/help`            | Shows info about available commands   |
+| Command            | Description                                |
+| ------------------ | ------------------------------------------ |
+| `/play`            | Play a track from name or URL              |
+| `/play_boss_music` | Loads, shuffles and plays all boss tracks  |
+| `/add_track`       | Add new track to the boss music collection |
+| `/help`            | Shows info about available commands        |
 
 ---
 
 ## 🪄 Button Controls
 
-| Button            | Action                                      |
-| ----------------- | ------------------------------------------- |
-| **Pause** | Pauses music playback                       |
-| **Resume** | Resume music playback |
-| **Fight**  | Reloads and shuffles all boss tracks              |
-| **Victory** | Resumes old music queue if available, if not available it stops playback and leaves voice channel |
-| **Stop**          | Stops playback and leaves the voice channel |
+| Button | Action                                                                                            |
+| ------ | ------------------------------------------------------------------------------------------------- |
+| **⏸**  | Pauses music playback                                                                             |
+| **⏵**  | Resume music playback                                                                             |
+| **⚔️** | Reloads and shuffles all boss tracks                                                              |
+| **🏆** | Resumes old music queue if available, if not available it stops playback and leaves voice channel |
+| **⏹**  | Stops playback and leaves the voice channel                                                       |
 
 ---
 
