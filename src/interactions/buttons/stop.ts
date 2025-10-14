@@ -1,5 +1,6 @@
 import { ButtonBuilder, ButtonInteraction, ButtonStyle } from "discord.js";
 import { player } from "../../index";
+import { queueManager } from "../../services/queueManager";
 
 export const stopButton = new ButtonBuilder()
   .setCustomId("stop")
@@ -22,4 +23,5 @@ export const execute = async (interaction: ButtonInteraction) => {
   }
 
   queue.delete();
+  queueManager.clear(guildId);
 };
