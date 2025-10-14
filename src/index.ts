@@ -69,6 +69,7 @@ player.events.on(GuildQueueEvent.PlayerStart, async (queue, track) => {
   const data = buildNowPlayingMessage(track, true, queue);
 
   musicPlayerMessage.clearProgressInterval();
+
   await musicPlayerMessage.delete();
 
   const msg = await channel.send(data as MessageCreateOptions);
@@ -104,7 +105,7 @@ player.events.on(GuildQueueEvent.QueueDelete, async (queue) => {
 
   const data = buildEmbedMessage({
     title: "Left the voice channel",
-    color: "stopped",
+    color: "default",
   });
 
   const channel = queue.metadata.channel;

@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
 import { player } from "../..";
+import { QueryType } from "discord-player";
 
 export const data = new SlashCommandBuilder()
   .setName("play")
@@ -48,17 +49,17 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
     const track = result.tracks[0];
     normalQueue.addTrack(track);
 
-    if (!normalQueue.connection) await normalQueue.connect(channel);
-    if (!normalQueue.isPlaying()) await normalQueue.node.play();
-
     const data = buildEmbedMessage({
-      title: `Queued at position #${normalQueue.tracks.size + 1}`,
+      title: `Queued at position #${normalQueue.tracks.size}`,
       description: `[${track.title}](${track.url}) by ${track.author}`,
       thumbnail: result.tracks[0].thumbnail,
       footerText: "Not the correct track? Try being more specific",
       color: "queue",
     });
     interaction.reply(data);
+
+    if (!normalQueue.connection) await normalQueue.connect(channel);
+    if (!normalQueue.isPlaying()) await normalQueue.node.play();
   } catch (error) {
     console.error(error);
   }

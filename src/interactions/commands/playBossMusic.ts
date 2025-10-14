@@ -11,7 +11,9 @@ import { getAllMusicFiles } from "../../utils/helpers/getAllMusicFiles";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
 import { getRandomFightGif } from "../../utils/helpers/getRandomFightingGif";
 import { queueManager } from "../../services/queueManager";
-import { savePreviousQueueDataAndDeleteQueue } from "../../utils/helpers/saveQueueData";
+import { savePreviousQueue } from "../../utils/helpers/saveQueueData";
+import { getBossTracks } from "../../utils/helpers/getBossTracks";
+import { delay } from "../../utils/helpers/utils";
 
 export const data = new SlashCommandBuilder()
   .setName("play_boss_music")
@@ -31,15 +33,21 @@ export const execute = async (
       color: "error",
       ephemeral: true,
     });
-    await interaction.reply(data);
+    await interaction.followUp(data);
     return;
   }
 
   const guild = guildMember.guild;
+  let queue = player.nodes.get(guild);
 
-  await savePreviousQueueDataAndDeleteQueue(guild);
+  if (queue) {
+    queue.node.stop();
+    await savePreviousQueue(queue, guild.id);
+    (queue.metadata as any).isSwithing = true;
+    queue.delete();
+  }
 
-  let newQueue = player.nodes.create(guild, {
+  const newQueue = player.nodes.create(guild, {
     metadata: {
       channel: interaction.channel,
       voiceChannel: channel,
@@ -47,7 +55,11 @@ export const execute = async (
   });
 
   try {
-    const tracks = await getAllMusicFiles("music", player, interaction.user);
+    const tracks = await getBossTracks(
+      "music/boss_music.json",
+      player,
+      interaction.user
+    );
     const hornTracks = await getAllMusicFiles(
       "music/horns",
       player,
@@ -62,25 +74,18 @@ export const execute = async (
     newQueue.tracks.shuffle();
     newQueue.insertTrack(pickRandomHornTrack());
 
-    if (!newQueue.connection) await newQueue.connect(channel);
-    await newQueue.node.play();
+    queueManager.setQueueType("boss");
 
     const data = buildEmbedMessage({
       title: "⚔️ Time to slay some enemies!",
       imageUrl: await getRandomFightGif(),
       color: "bossMode",
     });
-    if (!interaction.channel) return;
 
-    queueManager.setQueueType("boss");
+    await interaction.reply(data);
 
-    if (interaction.type === InteractionType.ApplicationCommand) {
-      await interaction.reply(data);
-    } else {
-      await (interaction.channel as TextChannel).send(
-        data as MessageCreateOptions
-      );
-    }
+    if (!newQueue.connection) await newQueue.connect(channel);
+    if (!newQueue.isPlaying()) await newQueue.node.play();
   } catch (err) {
     console.error(err);
     await interaction.reply("❌ Something went wrong while trying to play.");
