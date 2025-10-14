@@ -18,9 +18,9 @@ Here's how to summon the power of music and unleash epic soundtracks:
 > Instantly summon **EPIC boss battle music**!  
 > Perfect for intense raids, duels, or just feeling awesome.
 
-💾 **/add_boss_track**
-> Add a new **boss battle tracks** to the bot's arsenal. 
-> *Example:* \`/add_boss_track url:https://spotify.com/track/abc123\`
+💾 **/add_track**
+> Add a new **boss battle track** to the bot's arsenal. 
+> *Example:* \`/add_track url:https://spotify.com/track/abc123\`
 `;
 
   const embedMessage = buildEmbedMessage({

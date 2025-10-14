@@ -4,7 +4,7 @@ import path from "path";
 import fs from "fs";
 
 export const data = new SlashCommandBuilder()
-  .setName("add_boss_track")
+  .setName("add_track")
   .setDescription("Add a new track to the boss music library")
   .addStringOption((option) =>
     option
