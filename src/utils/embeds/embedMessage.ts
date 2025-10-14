@@ -1,6 +1,5 @@
 import { InteractionReplyOptions } from "discord.js";
-import { EMBED_COLORS } from "../constants/constants";
-import { Color } from "../constants/constants.types";
+import { embedColors, Color } from "../constants/constants";
 
 export const buildEmbedMessage = ({
   title,
@@ -24,7 +23,7 @@ export const buildEmbedMessage = ({
       {
         title,
         description: description && description,
-        color: color && EMBED_COLORS[color],
+        color: color && embedColors[color],
         ...(imageUrl && {
           image: {
             url: imageUrl,

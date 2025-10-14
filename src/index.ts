@@ -104,7 +104,7 @@ player.events.on(GuildQueueEvent.QueueDelete, async (queue) => {
 
   const data = buildEmbedMessage({
     title: "Left the voice channel",
-    color: "red",
+    color: "stopped",
   });
 
   const channel = queue.metadata.channel;

@@ -53,10 +53,10 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 
     const data = buildEmbedMessage({
       title: `Queued at position #${normalQueue.tracks.size + 1}`,
-      description: `[${track.title}](${track.url}) by ${track.author} [${track.duration}]`,
+      description: `[${track.title}](${track.url}) by ${track.author}`,
       thumbnail: result.tracks[0].thumbnail,
       footerText: "Not the correct track? Try being more specific",
-      color: "green",
+      color: "queue",
     });
     interaction.reply(data);
   } catch (error) {

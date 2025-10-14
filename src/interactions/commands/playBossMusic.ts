@@ -28,7 +28,7 @@ export const execute = async (
   if (!channel) {
     const data = buildEmbedMessage({
       title: "❌ You must be in a voice channel.",
-      color: "red",
+      color: "error",
       ephemeral: true,
     });
     await interaction.reply(data);
@@ -68,7 +68,7 @@ export const execute = async (
     const data = buildEmbedMessage({
       title: "⚔️ Time to slay some enemies!",
       imageUrl: await getRandomFightGif(),
-      color: "green",
+      color: "bossMode",
     });
     if (!interaction.channel) return;
 

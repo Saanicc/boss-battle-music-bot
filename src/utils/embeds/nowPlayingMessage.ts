@@ -3,13 +3,12 @@ import {
   ActionRowBuilder,
   APIEmbed,
   ButtonBuilder,
-  EmbedType,
   MessageCreateOptions,
 } from "discord.js";
 import { enemiesSlainButton } from "../../interactions/buttons/enemiesSlain";
 import { slayEnemiesButton } from "../../interactions/buttons/slayEnemies";
 import { stopButton } from "../../interactions/buttons/stop";
-import { EMBED_COLORS } from "../constants/constants";
+import { embedColors } from "../constants/constants";
 import { queueManager } from "../../services/queueManager";
 import { pauseButton } from "../../interactions/buttons/pause";
 import { resumeButton } from "../../interactions/buttons/resume";
@@ -33,11 +32,12 @@ export const buildNowPlayingMessage = (
   isPlaying: boolean,
   queue?: GuildQueue
 ): MessageCreateOptions => {
+  const isBossQueue =
+    (isPlaying || !isPlaying) && queueManager.getQueueType() === "boss";
+
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
     isPlaying ? pauseButton : resumeButton,
-    (isPlaying || !isPlaying) && queueManager.getQueueType() === "boss"
-      ? enemiesSlainButton
-      : slayEnemiesButton,
+    isBossQueue ? enemiesSlainButton : slayEnemiesButton,
     stopButton
   );
 
@@ -74,9 +74,13 @@ export const buildNowPlayingMessage = (
     thumbnail: {
       url: track.thumbnail,
     },
-    color: isPlaying ? EMBED_COLORS.green : undefined,
+    color:
+      isPlaying && !isBossQueue
+        ? embedColors.nowPlaying
+        : isPlaying && isBossQueue
+        ? embedColors.bossMode
+        : embedColors.paused,
   } as APIEmbed;
-
   return {
     embeds: [embed],
     components: [row],

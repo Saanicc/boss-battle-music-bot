@@ -1,7 +1,24 @@
-import { EmbedColors } from "./constants.types";
+export type Color =
+  | "nowPlaying"
+  | "paused"
+  | "queue"
+  | "error"
+  | "success"
+  | "info"
+  | "stopped"
+  | "bossMode"
+  | "default";
 
-export const EMBED_COLORS: EmbedColors = {
-  red: 0xff0000,
-  green: 0x1db954,
-  orange: 0xffcc00,
+export type EmbedColors = Record<Color, number>;
+
+export const embedColors: EmbedColors = {
+  nowPlaying: 0x5865f2,
+  paused: 0x7289da,
+  queue: 0x3ba55d,
+  error: 0xed4245,
+  success: 0x57f287,
+  info: 0x5865f2,
+  stopped: 0x99aab5,
+  bossMode: 0x9b51e0,
+  default: 0x2b2d31,
 };
