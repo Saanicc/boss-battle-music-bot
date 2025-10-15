@@ -4,6 +4,8 @@ import * as enemiesSlain from "./enemiesSlain";
 import * as pause from "./pause";
 import * as resume from "./resume";
 import * as queue from "./queue";
+import * as next from "./next";
+import * as previous from "./previous";
 
 export const buttons = {
   slay_enemies: slayEnemies,
@@ -12,4 +14,6 @@ export const buttons = {
   resume,
   stop,
   queue,
+  next,
+  previous,
 };

@@ -14,6 +14,8 @@ import { pauseButton } from "../../interactions/buttons/pause";
 import { resumeButton } from "../../interactions/buttons/resume";
 import { getFormattedTrackTitle } from "../helpers/getFormattedTrackTitle";
 import { queueButton } from "../../interactions/buttons/queue";
+import { nextButton } from "../../interactions/buttons/next";
+import { previousButton } from "../../interactions/buttons/previous";
 
 const createProgressBar = (queue: GuildQueue, size = 20): string => {
   const progress = queue.node.getTimestamp();
@@ -39,9 +41,13 @@ export const buildNowPlayingMessage = (
 
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
     isPlaying ? pauseButton : resumeButton,
-    isBossQueue ? enemiesSlainButton : slayEnemiesButton,
+    previousButton.setDisabled(queue?.history.previousTrack ? false : true),
+    nextButton.setDisabled(queue?.history.nextTrack ? false : true),
     stopButton,
     queueButton
+  );
+  const row2 = new ActionRowBuilder<ButtonBuilder>().addComponents(
+    isBossQueue ? enemiesSlainButton : slayEnemiesButton
   );
 
   const progressBar = queue ? createProgressBar(queue) : "N/A";
@@ -86,6 +92,6 @@ export const buildNowPlayingMessage = (
   } as APIEmbed;
   return {
     embeds: [embed],
-    components: [row],
+    components: [row, row2],
   };
 };
