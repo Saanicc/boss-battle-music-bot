@@ -1,7 +1,6 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
-import { player } from "../..";
-import { QueryType } from "discord-player";
+import { useMainPlayer, useQueue } from "discord-player";
 
 export const data = new SlashCommandBuilder()
   .setName("play")
@@ -14,6 +13,9 @@ export const data = new SlashCommandBuilder()
   );
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
+  const player = useMainPlayer();
+  const queue = useQueue();
+
   const query = interaction.options.getString("query", true);
   const member = await interaction.guild?.members.fetch(interaction.user.id);
   const channel = member?.voice.channel;
@@ -27,7 +29,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
   }
 
   const guild = member.guild;
-  let normalQueue = player.nodes.get(guild.id);
+  let normalQueue = queue;
 
   if (!normalQueue) {
     normalQueue = player.nodes.create(guild, {

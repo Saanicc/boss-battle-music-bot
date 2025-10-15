@@ -5,12 +5,12 @@ import {
   MessageCreateOptions,
   TextChannel,
 } from "discord.js";
-import { player } from "../..";
 import { queueManager } from "../../services/queueManager";
 import { restoreOldQueue } from "../../utils/helpers/restoreOldQueue";
 import { delay } from "../../utils/helpers/utils";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
 import { musicPlayerMessage } from "../../services/musicPlayerMessage";
+import { useQueue } from "discord-player";
 
 export const enemiesSlainButton = new ButtonBuilder()
   .setCustomId("enemies_slain")
@@ -25,7 +25,7 @@ export const execute = async (interaction: ButtonInteraction) => {
     return;
   }
 
-  const queue = player.nodes.get(guild);
+  const queue = useQueue();
 
   if (!queue) return;
 

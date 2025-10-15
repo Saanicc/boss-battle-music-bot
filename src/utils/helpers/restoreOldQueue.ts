@@ -1,9 +1,8 @@
 import { queueManager } from "../../services/queueManager";
-import { player } from "../..";
 import { Guild, TextBasedChannel, VoiceBasedChannel } from "discord.js";
-import { Track } from "discord-player";
+import { Player, Track, useMainPlayer } from "discord-player";
 
-const reSearch = async (track: Track) => {
+const reSearch = async (track: Track, player: Player) => {
   try {
     const result = await player.search(track.url ?? track.title, {
       requestedBy: track.requestedBy ?? undefined,
@@ -35,6 +34,8 @@ export const restoreOldQueue = async ({
     return;
   }
 
+  const player = useMainPlayer();
+
   const newQueue = player.nodes.create(guild, {
     metadata: { channel: textChannel, voiceChannel },
   });
@@ -43,11 +44,11 @@ export const restoreOldQueue = async ({
 
   let currentTrack = undefined;
   if (stored.currentTrack) {
-    currentTrack = await reSearch(stored.currentTrack);
+    currentTrack = await reSearch(stored.currentTrack, player);
   }
 
   for (const track of stored.tracks) {
-    const rebuilt = await reSearch(track);
+    const rebuilt = await reSearch(track, player);
     if (rebuilt) newQueue.addTrack(rebuilt);
   }
 

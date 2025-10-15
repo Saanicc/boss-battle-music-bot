@@ -1,5 +1,5 @@
 import { ButtonBuilder, ButtonInteraction, ButtonStyle } from "discord.js";
-import { player } from "../..";
+import { useQueue } from "discord-player";
 
 export const resumeButton = new ButtonBuilder()
   .setCustomId("resume")
@@ -14,7 +14,7 @@ export const execute = async (interaction: ButtonInteraction) => {
     return;
   }
 
-  const queue = player.nodes.get(guild);
+  const queue = useQueue();
 
   if (!queue) return;
 

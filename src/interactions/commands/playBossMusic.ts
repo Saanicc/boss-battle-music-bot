@@ -3,13 +3,13 @@ import {
   CommandInteraction,
   SlashCommandBuilder,
 } from "discord.js";
-import { player } from "../../index";
 import { getAllMusicFiles } from "../../utils/helpers/getAllMusicFiles";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
 import { getRandomFightGif } from "../../utils/helpers/getRandomFightingGif";
 import { queueManager } from "../../services/queueManager";
 import { savePreviousQueue } from "../../utils/helpers/saveQueueData";
 import { getBossTracks } from "../../utils/helpers/getBossTracks";
+import { useMainPlayer, useQueue } from "discord-player";
 
 export const data = new SlashCommandBuilder()
   .setName("play_boss_music")
@@ -18,6 +18,8 @@ export const data = new SlashCommandBuilder()
 export const execute = async (
   interaction: CommandInteraction | ButtonInteraction
 ) => {
+  const player = useMainPlayer();
+  const queue = useQueue();
   const guildMember = await interaction.guild?.members.fetch(
     interaction.user.id
   );
@@ -34,7 +36,6 @@ export const execute = async (
   }
 
   const guild = guildMember.guild;
-  let queue = player.nodes.get(guild);
 
   if (queue) {
     queue.node.stop();

@@ -1,6 +1,6 @@
 import { ButtonBuilder, ButtonInteraction, ButtonStyle } from "discord.js";
-import { player } from "../../index";
 import { queueManager } from "../../services/queueManager";
+import { useQueue } from "discord-player";
 
 export const stopButton = new ButtonBuilder()
   .setCustomId("stop")
@@ -8,14 +8,14 @@ export const stopButton = new ButtonBuilder()
   .setStyle(ButtonStyle.Danger);
 
 export const execute = async (interaction: ButtonInteraction) => {
+  const queue = useQueue();
+
   const { guildId } = interaction;
 
   if (!guildId) {
     await interaction.reply("⚠️ No guild was found.");
     return;
   }
-
-  const queue = player.nodes.get(guildId);
 
   if (!queue) {
     await interaction.reply("⚠️ No active music queue.");
