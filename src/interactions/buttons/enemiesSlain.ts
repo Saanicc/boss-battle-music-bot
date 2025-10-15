@@ -58,6 +58,7 @@ export const execute = async (interaction: ButtonInteraction) => {
 
   await restoreOldQueue({
     guild,
+    storedQueue: stored,
     textChannel: interaction.channel ?? undefined,
     voiceChannel: stored.voiceChannel,
   });

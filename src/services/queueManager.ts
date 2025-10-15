@@ -3,7 +3,7 @@ import { VoiceChannel } from "discord.js";
 
 export type QueueType = "normal" | "boss";
 
-interface StoredQueue {
+export interface StoredQueue {
   tracks: Track[];
   queueType: QueueType;
   currentTrack?: Track;

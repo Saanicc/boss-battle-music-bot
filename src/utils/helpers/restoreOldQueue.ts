@@ -1,4 +1,4 @@
-import { queueManager } from "../../services/queueManager";
+import { queueManager, StoredQueue } from "../../services/queueManager";
 import { Guild, TextBasedChannel, VoiceBasedChannel } from "discord.js";
 import { Player, Track, useMainPlayer } from "discord-player";
 
@@ -15,19 +15,16 @@ const reSearch = async (track: Track, player: Player) => {
 
 export const restoreOldQueue = async ({
   guild,
+  storedQueue,
   textChannel,
   voiceChannel,
 }: {
   guild: Guild;
+  storedQueue: StoredQueue;
   textChannel?: TextBasedChannel;
   voiceChannel?: VoiceBasedChannel;
 }) => {
   const guildId = guild.id;
-  const stored = queueManager.retrieve(guildId);
-
-  if (!stored) {
-    return;
-  }
 
   if (!voiceChannel || !voiceChannel.isVoiceBased()) {
     console.warn(`No valid voice channel to restore queue for ${guildId}.`);
@@ -43,17 +40,17 @@ export const restoreOldQueue = async ({
   if (!newQueue.connection) await newQueue.connect(voiceChannel);
 
   let currentTrack = undefined;
-  if (stored.currentTrack) {
-    currentTrack = await reSearch(stored.currentTrack, player);
+  if (storedQueue.currentTrack) {
+    currentTrack = await reSearch(storedQueue.currentTrack, player);
   }
 
-  for (const track of stored.tracks) {
+  for (const track of storedQueue.tracks) {
     const rebuilt = await reSearch(track, player);
     if (rebuilt) newQueue.addTrack(rebuilt);
   }
 
-  if (currentTrack && stored.position)
-    await newQueue.node.play(currentTrack, { seek: stored.position });
+  if (currentTrack && storedQueue.position)
+    await newQueue.node.play(currentTrack, { seek: storedQueue.position });
   else {
     await newQueue.node.play();
   }
