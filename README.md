@@ -17,7 +17,7 @@ Summon it anytime to power up your gameplay with cinematic, high-energy music. �
   - Progress bar
   - Track number and duration
   - Requester tag
-- ⏯️ **Interactive buttons** — Pause, Resume, Fight, Victory and Stop
+- ⏯️ **Interactive buttons** — **⏸**, **⏵**, **⚔️**, **🏆** and **⏹**
 - 📡 **Auto updates** current song info every second
 - 💬 Clean, responsive embeds for a sleek experience
 
@@ -51,7 +51,7 @@ Summon it anytime to power up your gameplay with cinematic, high-energy music. �
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/boss-battle-music.git
+git clone https://github.com/Saanicc/boss-battle-music-bot.git
 cd boss-battle-music
 ```
 
@@ -88,14 +88,47 @@ docker compose up -d
 
 ## 💾 Volumes
 
-Your music library is mounted as a volume in Docker, so you can easily add or replace songs without rebuilding the container.
+Your music library is mounted as a Docker volume, allowing you to easily add, remove, or replace songs without rebuilding the container.
 
 ```bash
 volumes:
   - ./music:/app/music
 ```
 
-✅ Make sure both `/music` and `/music/horns` folders are included.
+### 📁 Music Folder Structure
+
+Make sure your local `./music` directory includes the following:
+
+```plaintext
+music/
+├── horns/
+│   ├── horn1.mp3
+│   └── horn2.mp3
+└── boss_music.json
+```
+
+### 🧾 boss_music.json
+
+This file defines your boss battle tracks and must be located directly inside the `/music` directory.
+
+Required format:
+
+```json
+{
+  "bossTracks": [
+    "https://open.spotify.com/track/your-boss-track-url",
+    "https://open.spotify.com/track/another-boss-track"
+  ]
+}
+```
+
+Each entry should be a valid `Soundcloud` or `Spotify` track URL.
+
+### ✅ Required folders and files:
+
+- /music
+- /music/horns
+- /music/boss_music.json
 
 ## 🚀 Example Usage
 
