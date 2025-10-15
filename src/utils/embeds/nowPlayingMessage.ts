@@ -12,6 +12,8 @@ import { embedColors } from "../constants/constants";
 import { queueManager } from "../../services/queueManager";
 import { pauseButton } from "../../interactions/buttons/pause";
 import { resumeButton } from "../../interactions/buttons/resume";
+import { getFormattedTrackTitle } from "../helpers/getFormattedTrackTitle";
+import { queueButton } from "../../interactions/buttons/queue";
 
 const createProgressBar = (queue: GuildQueue, size = 20): string => {
   const progress = queue.node.getTimestamp();
@@ -38,7 +40,8 @@ export const buildNowPlayingMessage = (
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
     isPlaying ? pauseButton : resumeButton,
     isBossQueue ? enemiesSlainButton : slayEnemiesButton,
-    stopButton
+    stopButton,
+    queueButton
   );
 
   const progressBar = queue ? createProgressBar(queue) : "N/A";
@@ -48,7 +51,7 @@ export const buildNowPlayingMessage = (
 
   const embed = {
     title: isPlaying ? "⏵ Now Playing" : "⏸ Music Stopped",
-    description: `[${track.title}](${track.url}) by ${track.author}`,
+    description: `${getFormattedTrackTitle(track)} by ${track.author}`,
     fields: [
       ...(queue
         ? [
