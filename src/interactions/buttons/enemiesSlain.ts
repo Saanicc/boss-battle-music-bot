@@ -47,14 +47,16 @@ export const execute = async (interaction: ButtonInteraction) => {
     return;
   }
 
-  await delay(1000);
-
   const data = buildEmbedMessage({
     title: "Restoring old queue...",
     color: "info",
   });
 
-  await (interaction.channel as TextChannel).send(data as MessageCreateOptions);
+  const msg = await (interaction.channel as TextChannel).send(
+    data as MessageCreateOptions
+  );
+
+  await delay(1250);
 
   await restoreOldQueue({
     guild,
@@ -62,4 +64,6 @@ export const execute = async (interaction: ButtonInteraction) => {
     textChannel: interaction.channel ?? undefined,
     voiceChannel: stored.voiceChannel,
   });
+
+  await msg.delete();
 };
