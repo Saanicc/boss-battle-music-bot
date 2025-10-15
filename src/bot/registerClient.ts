@@ -31,6 +31,10 @@ export const registerDiscordClient = async () => {
     }
   });
 
+  client.on("error", (error) => {
+    console.error(error);
+  });
+
   await client.login(config.DISCORD_TOKEN);
 
   return client;

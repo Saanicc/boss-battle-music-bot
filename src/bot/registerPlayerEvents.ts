@@ -57,4 +57,51 @@ export const registerPlayerEvents = (player: Player) => {
     const channel = queue.metadata.channel;
     await channel.send(data as MessageCreateOptions);
   });
+
+  player.events.on(GuildQueueEvent.EmptyQueue, async (queue) => {
+    const channel = queue.metadata.channel as TextChannel;
+
+    const data = buildEmbedMessage({
+      title:
+        "Reached the end of the queue. Please queue new track(s) to continue playback.",
+      color: "info",
+    });
+
+    await channel.send(data as MessageCreateOptions);
+  });
+
+  player.events.on(GuildQueueEvent.PlayerError, async (queue, error, track) => {
+    const channel = queue.metadata.channel as TextChannel;
+
+    const extractorName = track.extractor?.identifier ?? "Unknown";
+    const streamUrl =
+      track.raw?.source?.url || track.raw?.url || track.url || "N/A";
+
+    const data = buildEmbedMessage({
+      title: `⚠️ ${error.name} ⚠️`,
+      description: `
+        **Message:** ${error.message}
+
+        🎵 **Track:** ${track.title}
+        🔗 **URL:** [Open Track](${track.url})
+        🧩 **Extractor:** ${extractorName}
+        📡 **Stream:** ${streamUrl}
+      `,
+      color: "error",
+    });
+
+    await channel.send(data as MessageCreateOptions);
+  });
+
+  player.events.on(GuildQueueEvent.Error, async (queue, error) => {
+    const channel = queue.metadata.channel as TextChannel;
+
+    const embed = buildEmbedMessage({
+      title: `⚠️ ${error.name} ⚠️`,
+      description: error.message,
+      color: "error",
+    });
+
+    await channel.send(embed as MessageCreateOptions);
+  });
 };
