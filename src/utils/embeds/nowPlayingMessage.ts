@@ -20,9 +20,9 @@ import { previousButton } from "../../interactions/buttons/previous";
 const createProgressBar = (queue: GuildQueue, size = 16): string => {
   const progress = queue.node.getTimestamp();
 
-  if (!progress) return `▱`.repeat(size);
+  if (!progress) return "N/A";
 
-  if (!progress.current.value || !progress.total.value) return `▱`.repeat(size);
+  if (!progress.current.value || !progress.total.value) return "N/A";
 
   const ratio = progress.current.value / progress.total.value;
   const filled = Math.round(ratio * size);
