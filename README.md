@@ -32,7 +32,7 @@ Summon it anytime to power up your gameplay with cinematic, high-energy music. ð
 | `/add_track`       | Add new track to the boss music collection          |
 | `/help`            | Shows info about available commands                 |
 | `/queue`           | Displays the next five upcoming tracks in the queue |
-| `skip`             | Skip the currently playing song.                    |
+| `/skip`             | Skip the currently playing song.                    |
 
 ---
 
@@ -57,7 +57,7 @@ Summon it anytime to power up your gameplay with cinematic, high-energy music. ð
 
 ```bash
 git clone https://github.com/Saanicc/gaming-music-bot.git
-cd boss-battle-music
+cd gaming-music-bot
 ```
 
 ### 2. Install dependencies
@@ -127,7 +127,7 @@ Required format:
 }
 ```
 
-Each entry should be a valid `Soundcloud` or `Spotify` track URL.
+Each entry should be a valid `Soundcloud`, `Spotify` or `YouTube` URL.
 
 ### âœ… Required folders and files:
 
