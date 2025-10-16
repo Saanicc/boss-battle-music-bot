@@ -31,7 +31,7 @@ export const registerPlayerEvents = (player: Player) => {
         } catch (err) {
           console.error("Failed to update progress:", err);
         }
-      }, 1000)
+      }, 10000)
     );
   });
 
