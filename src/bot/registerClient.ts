@@ -4,7 +4,6 @@ import { setBotActivity } from "../utils/helpers/setBotActivity";
 import { buttons } from "../interactions/buttons";
 import { commands } from "../interactions/commands";
 import { handleInteraction } from "../utils/helpers/handleInteraction";
-import { config } from "../config";
 
 export const registerDiscordClient = () => {
   const client = new Client({
@@ -34,8 +33,6 @@ export const registerDiscordClient = () => {
   client.on("error", (error) => {
     console.error(error);
   });
-
-  client.login(config.DISCORD_TOKEN);
 
   return client;
 };
