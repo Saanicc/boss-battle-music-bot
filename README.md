@@ -56,7 +56,7 @@ Summon it anytime to power up your gameplay with cinematic, high-energy music. ð
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Saanicc/boss-battle-music-bot.git
+git clone https://github.com/Saanicc/gaming-music-bot.git
 cd boss-battle-music
 ```
 
