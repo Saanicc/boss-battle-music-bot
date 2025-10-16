@@ -2,6 +2,7 @@ import { Player } from "discord-player";
 import { AttachmentExtractor } from "@discord-player/extractor";
 import { SpotifyExtractor } from "discord-player-spotify";
 import { SoundcloudExtractor } from "discord-player-soundcloud";
+import { YoutubeSabrExtractor } from "../youtubei/youtubeiExtractor";
 import { config } from "../config";
 
 export const registerPlayerExtractors = async (player: Player) => {
@@ -11,5 +12,6 @@ export const registerPlayerExtractors = async (player: Player) => {
     market: "SE",
   });
   await player.extractors.register(SoundcloudExtractor, {});
+  await player.extractors.register(YoutubeSabrExtractor, {});
   await player.extractors.register(AttachmentExtractor, {});
 };

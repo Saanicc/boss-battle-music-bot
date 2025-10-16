@@ -18,14 +18,20 @@
   },
   "dependencies": {
     "@discordjs/opus": "^0.10.0",
+    "@napi-rs/canvas": "^0.1.80",
+    "bgutils-js": "^3.2.0",
     "discord-player": "^7.1.0",
     "discord-player-soundcloud": "^1.0.7",
     "discord-player-spotify": "^1.1.7",
     "discord.js": "^14.23.2",
     "dotenv": "^17.2.3",
-    "mediaplex": "^1.0.0"
+    "googlevideo": "^4.0.4",
+    "jsdom": "^27.0.0",
+    "mediaplex": "^1.0.0",
+    "youtubei.js": "^15.1.1"
   },
   "devDependencies": {
+    "@types/jsdom": "^27.0.0",
     "nodemon": "^3.0.0",
     "tsup": "^8.5.0",
     "tsx": "^4.20.5",
