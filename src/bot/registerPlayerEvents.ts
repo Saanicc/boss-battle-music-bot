@@ -7,17 +7,19 @@ import {
 import { buildNowPlayingMessage } from "../utils/embeds/nowPlayingMessage";
 import { musicPlayerMessage } from "../services/musicPlayerMessage";
 import { buildEmbedMessage } from "../utils/embeds/embedMessage";
+import { delay } from "../utils/helpers/utils";
 
 export const registerPlayerEvents = (player: Player) => {
   player.events.on(GuildQueueEvent.PlayerStart, async (queue, track) => {
     const channel = queue.metadata.channel as TextChannel;
 
-    const data = buildNowPlayingMessage(track, true, queue);
-
     musicPlayerMessage.clearProgressInterval();
 
     await musicPlayerMessage.delete();
 
+    await delay(1000);
+
+    const data = buildNowPlayingMessage(track, true, queue);
     const msg = await channel.send(data as MessageCreateOptions);
     musicPlayerMessage.set(msg);
 
