@@ -1,12 +1,12 @@
 import { ActivityType, Client, GatewayIntentBits } from "discord.js";
-import { config } from "../config";
 import { deployCommands } from "../deploy-commands";
 import { setBotActivity } from "../utils/helpers/setBotActivity";
 import { buttons } from "../interactions/buttons";
 import { commands } from "../interactions/commands";
 import { handleInteraction } from "../utils/helpers/handleInteraction";
+import { config } from "../config";
 
-export const registerDiscordClient = async () => {
+export const registerDiscordClient = () => {
   const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
   });
@@ -35,7 +35,7 @@ export const registerDiscordClient = async () => {
     console.error(error);
   });
 
-  await client.login(config.DISCORD_TOKEN);
+  client.login(config.DISCORD_TOKEN);
 
   return client;
 };
