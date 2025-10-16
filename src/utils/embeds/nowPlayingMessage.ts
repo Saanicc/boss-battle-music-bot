@@ -1,9 +1,14 @@
 import { GuildQueue, Track } from "discord-player";
 import {
   ActionRowBuilder,
-  APIEmbed,
   ButtonBuilder,
+  ContainerBuilder,
   MessageCreateOptions,
+  MessageFlags,
+  SectionBuilder,
+  SeparatorBuilder,
+  TextDisplayBuilder,
+  ThumbnailBuilder,
 } from "discord.js";
 import { enemiesSlainButton } from "../../interactions/buttons/enemiesSlain";
 import { slayEnemiesButton } from "../../interactions/buttons/slayEnemies";
@@ -17,18 +22,14 @@ import { queueButton } from "../../interactions/buttons/queue";
 import { nextButton } from "../../interactions/buttons/next";
 import { previousButton } from "../../interactions/buttons/previous";
 
-const createProgressBar = (queue: GuildQueue, size = 16): string => {
-  const progress = queue.node.getTimestamp();
-
-  if (!progress) return "N/A";
-
-  if (!progress.current.value || !progress.total.value) return "N/A";
-
-  const ratio = progress.current.value / progress.total.value;
-  const filled = Math.round(ratio * size);
-  const empty = Math.max(size - filled, 0);
-
-  return `▰`.repeat(filled) + `▱`.repeat(empty);
+const createProgressBar = (queue: GuildQueue, size = 16) => {
+  return queue.node.createProgressBar({
+    indicator: "▰",
+    leftChar: "▰",
+    rightChar: "▱",
+    length: size,
+    timecodes: false,
+  });
 };
 
 export const buildNowPlayingMessage = (
@@ -52,43 +53,56 @@ export const buildNowPlayingMessage = (
 
   const progressBar = queue ? createProgressBar(queue) : "N/A";
 
-  const embed = {
-    title: isPlaying ? "⏵ Now Playing" : "⏸ Music Stopped",
-    description: `${getFormattedTrackDescription(track)}`,
-    fields: [
-      ...(queue
-        ? [
-            {
-              name: "Progress",
-              value: `${progressBar}`,
-            },
-            {
-              name: "Track",
-              value: `**${queue.history.tracks.size + 1}** of **${
-                queue.tracks.size + queue.history.tracks.size + 1
-              }**`,
-              inline: true,
-            },
-          ]
-        : []),
-      {
-        name: "Requested by",
-        value: track.requestedBy?.toString() ?? "Unknown",
-        inline: true,
-      },
-    ],
-    thumbnail: {
-      url: track.thumbnail,
-    },
-    color:
-      isPlaying && !isBossQueue
-        ? embedColors.nowPlaying
-        : isPlaying && isBossQueue
-        ? embedColors.bossMode
-        : embedColors.paused,
-  } as APIEmbed;
+  const container = new ContainerBuilder();
+
+  const trackInfoText = new TextDisplayBuilder().setContent(`
+## ${isPlaying ? "⏵ Now Playing" : "⏸ Music Stopped"}  
+${getFormattedTrackDescription(track)}
+
+Progress
+${progressBar}
+`);
+
+  const requestedByText = new TextDisplayBuilder().setContent(
+    `Track requested by ${track.requestedBy?.toString() ?? "Unknown"}`
+  );
+
+  const thumbnail = new ThumbnailBuilder().setURL(track.thumbnail);
+
+  const headerSection = new SectionBuilder()
+    .addTextDisplayComponents(trackInfoText)
+    .setThumbnailAccessory(thumbnail);
+
+  container.addSectionComponents(headerSection);
+
+  if (queue) {
+    const currentTrackNumber = queue.history.tracks.size + 1;
+    const totalQueueNumber = queue.tracks.size + currentTrackNumber;
+
+    const queueText = new TextDisplayBuilder().setContent(`
+Track 
+**${currentTrackNumber}** of **${totalQueueNumber}**
+    `);
+
+    container.addTextDisplayComponents(queueText);
+  }
+
+  const separator = new SeparatorBuilder();
+
+  container.addSeparatorComponents(separator);
+  container.addActionRowComponents(row, row2);
+  container.addSeparatorComponents(separator);
+  container.addTextDisplayComponents(requestedByText);
+  container.setAccentColor(
+    isPlaying && !isBossQueue
+      ? embedColors.nowPlaying
+      : isPlaying && isBossQueue
+      ? embedColors.bossMode
+      : embedColors.paused
+  );
+
   return {
-    embeds: [embed],
-    components: [row, row2],
+    flags: MessageFlags.IsComponentsV2,
+    components: [container],
   };
 };
