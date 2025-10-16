@@ -1,8 +1,8 @@
 {
-  "name": "boss-battle-music-bot",
+  "name": "gaming-music-bot",
   "private": true,
   "version": "1.0.0",
-  "description": "A Discord bot that plays boss music",
+  "description": "A Discord bot that plays music",
   "main": "index.js",
   "type": "module",
   "engines": {
@@ -12,8 +12,8 @@
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.cjs",
     "build": "tsup src/index.ts --minify --external unfetch,ffmpeg-static",
-    "docker-build": "docker build -t boss-battle-music-bot .",
-    "docker-save": "docker save boss-battle-music-bot:latest -o music-discord-bot.tar",
+    "docker-build": "docker build -t gaming-music-bot .",
+    "docker-save": "docker save gaming-music-bot:latest -o music-discord-bot.tar",
     "build-prod": "npm run build && npm run docker-build && npm run docker-save"
   },
   "dependencies": {
