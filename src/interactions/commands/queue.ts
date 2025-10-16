@@ -26,7 +26,20 @@ export async function execute(
   }
 
   const currentTrack = queue.currentTrack;
-  const upcomingTracks = queue.tracks.data.slice(0, 5);
+
+  const getUpcomingTracks = () => {
+    const tracks = queue.tracks.data;
+
+    if (tracks.length === 0) return "Queue is empty";
+
+    const upcomingTracks = tracks.slice(0, 5);
+
+    return upcomingTracks
+      .map(
+        (track, index) => `${index + 1}. ${getFormattedTrackDescription(track)}`
+      )
+      .join("\n");
+  };
 
   const data = buildEmbedMessage({
     title: "⏵ Now Playing",
@@ -34,11 +47,7 @@ export async function execute(
     ${getFormattedTrackDescription(currentTrack)}
     
     **Upcoming Tracks:**
-    ${upcomingTracks
-      .map(
-        (track, index) => `${index + 1}. ${getFormattedTrackDescription(track)}`
-      )
-      .join("\n")}
+    ${getUpcomingTracks()}
     `,
     color: "queue",
     ephemeral: true,
