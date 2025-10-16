@@ -5,7 +5,7 @@ import {
 } from "discord.js";
 import { useQueue } from "discord-player";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
-import { getFormattedTrackTitle } from "../../utils/helpers/getFormattedTrackTitle";
+import { getFormattedTrackDescription } from "../../utils/helpers/getFormattedTrackDescription";
 
 export const data = new SlashCommandBuilder()
   .setName("queue")
@@ -31,13 +31,12 @@ export async function execute(
   const data = buildEmbedMessage({
     title: "⏵ Now Playing",
     description: `
-    ${getFormattedTrackTitle(currentTrack)} by ${currentTrack?.author}
+    ${getFormattedTrackDescription(currentTrack)}
     
     **Upcoming Tracks:**
     ${upcomingTracks
       .map(
-        (track, index) =>
-          `${index + 1}. ${getFormattedTrackTitle(track)} - ${track.author}`
+        (track, index) => `${index + 1}. ${getFormattedTrackDescription(track)}`
       )
       .join("\n")}
     `,

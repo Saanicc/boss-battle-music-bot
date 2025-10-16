@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
 import { useMainPlayer, useQueue } from "discord-player";
+import { getFormattedTrackDescription } from "../../utils/helpers/getFormattedTrackDescription";
 
 export const data = new SlashCommandBuilder()
   .setName("play")
@@ -53,7 +54,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 
     const data = buildEmbedMessage({
       title: `Queued at position #${normalQueue.tracks.size}`,
-      description: `[${track.title}](${track.url}) by ${track.author}`,
+      description: `${getFormattedTrackDescription(track)}`,
       thumbnail: result.tracks[0].thumbnail,
       footerText: "Not the correct track? Try being more specific",
       color: "queue",

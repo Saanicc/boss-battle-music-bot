@@ -12,17 +12,17 @@ import { embedColors } from "../constants/constants";
 import { queueManager } from "../../services/queueManager";
 import { pauseButton } from "../../interactions/buttons/pause";
 import { resumeButton } from "../../interactions/buttons/resume";
-import { getFormattedTrackTitle } from "../helpers/getFormattedTrackTitle";
+import { getFormattedTrackDescription } from "../helpers/getFormattedTrackDescription";
 import { queueButton } from "../../interactions/buttons/queue";
 import { nextButton } from "../../interactions/buttons/next";
 import { previousButton } from "../../interactions/buttons/previous";
 
-const createProgressBar = (queue: GuildQueue, size = 20): string => {
+const createProgressBar = (queue: GuildQueue, size = 16): string => {
   const progress = queue.node.getTimestamp();
 
-  if (!progress) return "N/A";
+  if (!progress) return `▱`.repeat(size);
 
-  if (!progress.current.value || !progress.total.value) return "N/A";
+  if (!progress.current.value || !progress.total.value) return `▱`.repeat(size);
 
   const ratio = progress.current.value / progress.total.value;
   const filled = Math.round(ratio * size);
@@ -51,19 +51,16 @@ export const buildNowPlayingMessage = (
   );
 
   const progressBar = queue ? createProgressBar(queue) : "N/A";
-  const timestamp = queue?.node.getTimestamp();
-  const currentTime = timestamp?.current?.label ?? "0:00";
-  const totalTime = timestamp?.total?.label ?? track.duration;
 
   const embed = {
     title: isPlaying ? "⏵ Now Playing" : "⏸ Music Stopped",
-    description: `${getFormattedTrackTitle(track)} by ${track.author}`,
+    description: `${getFormattedTrackDescription(track)}`,
     fields: [
       ...(queue
         ? [
             {
               name: "Progress",
-              value: `${progressBar}\n${currentTime} / ${totalTime}`,
+              value: `${progressBar}`,
             },
             {
               name: "Track",
