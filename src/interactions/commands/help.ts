@@ -21,6 +21,12 @@ Here's how to summon the power of music and unleash epic soundtracks:
 💾 **/add_track**
 > Add a new **boss battle track** to the bot's arsenal. 
 > *Example:* \`/add_track url:https://spotify.com/track/abc123\`
+
+🧾 **/queue**
+> Displays the next five upcoming tracks in the queue.
+
+⏭️ **/skip**
+> Skip the currently playing song.
 `;
 
   const embedMessage = buildEmbedMessage({
