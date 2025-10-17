@@ -56,10 +56,10 @@ export const buildNowPlayingMessage = (
   const container = new ContainerBuilder();
 
   const trackInfoText = new TextDisplayBuilder().setContent(`
-## ${isPlaying ? "⏵ Now Playing" : "⏸ Music Stopped"}  
+### ${isPlaying ? "⏵ Now Playing" : "⏸ Music Stopped"}  
 ${getFormattedTrackDescription(track)}
 
-Progress
+**Progress**
 ${progressBar}
 `);
 
@@ -80,7 +80,7 @@ ${progressBar}
     const totalQueueNumber = queue.tracks.size + currentTrackNumber;
 
     const queueText = new TextDisplayBuilder().setContent(`
-Track 
+**Track** 
 **${currentTrackNumber}** of **${totalQueueNumber}**
     `);
 

@@ -10,6 +10,7 @@ import { queueManager } from "../../services/queueManager";
 import { savePreviousQueue } from "../../utils/helpers/saveQueueData";
 import { getBossTracks } from "../../utils/helpers/getBossTracks";
 import { useMainPlayer, useQueue } from "discord-player";
+import { delay } from "../../utils/helpers/utils";
 
 export const data = new SlashCommandBuilder()
   .setName("play_boss_music")
@@ -75,11 +76,14 @@ export const execute = async (
 
     const data = buildEmbedMessage({
       title: "⚔️ Time to slay some enemies!",
+      titleFontSize: "lg",
       imageUrl: await getRandomFightGif(),
       color: "bossMode",
     });
 
     await interaction.reply(data);
+
+    await delay(500);
 
     if (!newQueue.connection) await newQueue.connect(channel);
     if (!newQueue.isPlaying()) await newQueue.node.play();

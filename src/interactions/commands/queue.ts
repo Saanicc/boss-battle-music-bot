@@ -44,10 +44,10 @@ export async function execute(
   const data = buildEmbedMessage({
     title: "⏵ Now Playing",
     description: `
-    ${getFormattedTrackDescription(currentTrack)}
+${getFormattedTrackDescription(currentTrack)}
     
-    **Upcoming Tracks:**
-    ${getUpcomingTracks()}
+**Upcoming Tracks:**
+${getUpcomingTracks()}
     `,
     color: "queue",
     ephemeral: true,

@@ -81,6 +81,7 @@ export const registerPlayerEvents = (player: Player) => {
 
     const data = buildEmbedMessage({
       title: `⚠️ ${error.name} ⚠️`,
+      titleFontSize: "md",
       description: `
         **Message:** ${error.message}
 
@@ -100,6 +101,7 @@ export const registerPlayerEvents = (player: Player) => {
 
     const embed = buildEmbedMessage({
       title: `⚠️ ${error.name} ⚠️`,
+      titleFontSize: "md",
       description: error.message,
       color: "error",
     });

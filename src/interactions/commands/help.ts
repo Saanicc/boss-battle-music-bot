@@ -31,6 +31,7 @@ Here's how to summon the power of music and unleash epic soundtracks:
 
   const embedMessage = buildEmbedMessage({
     title: `⚔️ ${interaction.client.user.username}'s help menu`,
+    titleFontSize: "md",
     color: "info",
     description,
     thumbnail: interaction.client.user?.displayAvatarURL(),
