@@ -1,9 +1,10 @@
-import { Track, useQueue } from "discord-player";
+import { GuildQueue, Track } from "discord-player";
 
-export const getFormattedTrackDescription = (track: Track | null) => {
-  const queue = useQueue();
-
-  if (!track || !queue) return "N/A";
+export const getFormattedTrackDescription = (
+  track: Track | null,
+  queue: GuildQueue
+) => {
+  if (!track) return "N/A";
 
   const totalTime = queue?.node.getTimestamp()?.total.label;
 

@@ -35,6 +35,10 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
   if (!normalQueue) {
     normalQueue = player.nodes.create(guild, {
       metadata: { channel: interaction.channel, voiceChannel: channel },
+      leaveOnEnd: true,
+      leaveOnEndCooldown: 60000,
+      leaveOnEmpty: true,
+      leaveOnEmptyCooldown: 15000,
     });
   }
   try {
@@ -54,7 +58,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 
     const data = buildEmbedMessage({
       title: `Queued at position #${normalQueue.tracks.size}`,
-      description: `${getFormattedTrackDescription(track)}`,
+      description: `${getFormattedTrackDescription(track, normalQueue)}`,
       thumbnail: result.tracks[0].thumbnail,
       footerText: "Not the correct track? Try being more specific",
       color: "queue",

@@ -35,7 +35,7 @@ const createProgressBar = (queue: GuildQueue, size = 16) => {
 export const buildNowPlayingMessage = (
   track: Track,
   isPlaying: boolean,
-  queue?: GuildQueue
+  queue: GuildQueue
 ): MessageCreateOptions => {
   const isBossQueue =
     (isPlaying || !isPlaying) && queueManager.getQueueType() === "boss";
@@ -57,7 +57,7 @@ export const buildNowPlayingMessage = (
 
   const trackInfoText = new TextDisplayBuilder().setContent(`
 ### ${isPlaying ? "⏵ Now Playing" : "⏸ Music Stopped"}  
-${getFormattedTrackDescription(track)}
+${getFormattedTrackDescription(track, queue)}
 
 **Progress**
 ${progressBar}

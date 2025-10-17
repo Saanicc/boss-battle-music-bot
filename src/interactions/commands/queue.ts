@@ -36,7 +36,8 @@ export async function execute(
 
     return upcomingTracks
       .map(
-        (track, index) => `${index + 1}. ${getFormattedTrackDescription(track)}`
+        (track, index) =>
+          `${index + 1}. ${getFormattedTrackDescription(track, queue)}`
       )
       .join("\n");
   };
@@ -44,7 +45,7 @@ export async function execute(
   const data = buildEmbedMessage({
     title: "⏵ Now Playing",
     description: `
-${getFormattedTrackDescription(currentTrack)}
+${getFormattedTrackDescription(currentTrack, queue)}
     
 **Upcoming Tracks:**
 ${getUpcomingTracks()}
