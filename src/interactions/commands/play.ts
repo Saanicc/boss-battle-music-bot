@@ -35,8 +35,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
   if (!normalQueue) {
     normalQueue = player.nodes.create(guild, {
       metadata: { channel: interaction.channel, voiceChannel: channel },
-      leaveOnEnd: true,
-      leaveOnEndCooldown: 60000,
+      leaveOnEnd: false,
       leaveOnEmpty: true,
       leaveOnEmptyCooldown: 15000,
     });
