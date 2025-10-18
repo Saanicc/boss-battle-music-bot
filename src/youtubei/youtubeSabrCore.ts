@@ -88,7 +88,7 @@ export async function createSabrStream(videoId: any) {
         vis: 0,
         splay: false,
         lactMilliseconds: "-1",
-        signatureTimestamp: innertube.session.player?.sts,
+        signatureTimestamp: innertube.session.player?.signature_timestamp,
       },
     },
     contentCheckOk: true,
@@ -97,7 +97,7 @@ export async function createSabrStream(videoId: any) {
     parse: true,
   });
 
-  const serverAbrStreamingUrl = innertube.session.player?.decipher(
+  const serverAbrStreamingUrl = await innertube.session.player?.decipher(
     playerResponse.streaming_data?.server_abr_streaming_url
   );
   const videoPlaybackUstreamerConfig =

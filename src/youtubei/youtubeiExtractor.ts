@@ -22,7 +22,7 @@ import { getInnertube } from "./getInnertube.js";
  * Discord-player extractor using only helpers from youtubeSabrCore.js.
  */
 export class YoutubeSabrExtractor extends BaseExtractor {
-  static identifier = "youtube-sabr";
+  static identifier = "com.itsmaat.discord-player.youtube-sabr";
   innertube: any;
   _stream: any;
 
@@ -53,8 +53,24 @@ export class YoutubeSabrExtractor extends BaseExtractor {
 
   async handle(query: any, context: any) {
     try {
-      const isPlaylist = /[?&]list=([a-zA-Z0-9_-]+)/.test(query);
-      const playlistId = extractPlaylistId(query);
+      let isPlaylist = false;
+      let playlistId = null;
+
+      try {
+        const urlObj = new URL(query);
+
+        const hasList = urlObj.searchParams.has("list");
+        const isShortLink = /(^|\.)youtu\.be$/i.test(urlObj.hostname);
+
+        isPlaylist = hasList && !isShortLink;
+        playlistId = isPlaylist ? urlObj.searchParams.get("list") : null;
+      } catch {
+        // fallback for non-URL queries (or plain playlist ids)
+        const m = query.match(/[?&]list=([a-zA-Z0-9_-]+)/);
+
+        isPlaylist = !!m;
+        playlistId = m?.[1] ?? null;
+      }
 
       // If playlist detected
       if (isPlaylist && playlistId) {
@@ -197,7 +213,6 @@ export class YoutubeSabrExtractor extends BaseExtractor {
       if (!videoId)
         throw new Error("Unable to extract video id from track.url");
       // Use the helper to create the SABR stream (returns Node.js readable)
-      console.log(videoId);
       const nodeStream = await createSabrStream(videoId);
       return nodeStream;
     } catch (e) {

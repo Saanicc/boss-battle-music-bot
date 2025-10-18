@@ -7,9 +7,21 @@
  * Note: Type definitions are placeholders ('any').
  */
 
-import { Innertube, UniversalCache } from "youtubei.js";
+import { Innertube, Platform, UniversalCache } from "youtubei.js";
 
 let ineerTubeInstance: any = null;
+
+Platform.shim.eval = async (data: any, env) => {
+  const properties = [];
+
+  if (env.n) properties.push(`n: exportedVars.nFunction("${env.n}")`);
+
+  if (env.sig) properties.push(`sig: exportedVars.sigFunction("${env.sig}")`);
+
+  const code = `${data.output}\nreturn { ${properties.join(", ")} }`;
+
+  return new Function(code)();
+};
 
 /**
  * Get the Innertube instance
@@ -19,7 +31,7 @@ export async function getInnertube(options?: any) {
   if (!ineerTubeInstance) {
     ineerTubeInstance = await Innertube.create({
       cache: new UniversalCache(false),
-      player_id: "0004de42",
+      // player_id: "0004de42",
       cookie: process.env.YOUTUBE_COOKIE,
     });
   }
