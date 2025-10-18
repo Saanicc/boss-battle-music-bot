@@ -6,12 +6,34 @@ import { YoutubeSabrExtractor } from "../youtubei/youtubeiExtractor";
 import { config } from "../config";
 
 export const registerPlayerExtractors = async (player: Player) => {
-  await player.extractors.register(SpotifyExtractor, {
+  const spotifyExt = await player.extractors.register(SpotifyExtractor, {
     clientId: config.SPOTIFY_CLIENT_ID,
     clientSecret: config.SPOTIFY_CLIENT_SECRET,
     market: "SE",
   });
-  await player.extractors.register(SoundcloudExtractor, {});
-  await player.extractors.register(YoutubeSabrExtractor, {});
-  await player.extractors.register(AttachmentExtractor, {});
+  const soundcloudExt = await player.extractors.register(
+    SoundcloudExtractor,
+    {}
+  );
+  const ytExt = await player.extractors.register(YoutubeSabrExtractor, {});
+  const attatchmentExt = await player.extractors.register(
+    AttachmentExtractor,
+    {}
+  );
+
+  if (spotifyExt) {
+    spotifyExt.priority = 2;
+  }
+
+  if (soundcloudExt) {
+    soundcloudExt.priority = 1;
+  }
+
+  if (ytExt) {
+    ytExt.priority = 3;
+  }
+
+  if (attatchmentExt) {
+    attatchmentExt.priority = 0;
+  }
 };
