@@ -63,6 +63,8 @@ export const registerPlayerEvents = (player: Player) => {
   player.events.on(GuildQueueEvent.EmptyQueue, async (queue) => {
     const channel = queue.metadata.channel as TextChannel;
 
+    queue.history.clear();
+
     const data = buildEmbedMessage({
       title:
         "Reached the end of the queue. Please queue new track(s) to continue playback.",
