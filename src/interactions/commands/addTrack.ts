@@ -3,6 +3,10 @@ import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
 import path from "path";
 import fs from "fs";
 
+type FileData = {
+  bossTracks: string[];
+};
+
 export const data = new SlashCommandBuilder()
   .setName("add_track")
   .setDescription("Add a new track to the boss music library")
@@ -27,10 +31,19 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
   }
 
   const fullPath = path.join(process.cwd(), "/music/boss_music.json");
-  const fileData = JSON.parse(fs.readFileSync(fullPath, "utf-8"));
+  const fileData = JSON.parse(fs.readFileSync(fullPath, "utf-8")) as FileData;
 
   if (Array.isArray(fileData.bossTracks)) {
-    (fileData.bossTracks as string[]).push(url);
+    if (fileData.bossTracks.find((trackUrl) => trackUrl === url)) {
+      const message = buildEmbedMessage({
+        title: "The track (URL) already exist!",
+        ephemeral: true,
+        color: "error",
+      });
+      return interaction.reply(message);
+    }
+
+    fileData.bossTracks.push(url);
     fs.writeFileSync(fullPath, JSON.stringify(fileData));
   }
 
