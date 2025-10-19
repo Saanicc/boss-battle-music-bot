@@ -8,6 +8,7 @@
  */
 
 import { Innertube, Platform, UniversalCache } from "youtubei.js";
+import { config } from "../config";
 
 let ineerTubeInstance: any = null;
 
@@ -32,7 +33,7 @@ export async function getInnertube(options?: any) {
     ineerTubeInstance = await Innertube.create({
       cache: new UniversalCache(false),
       // player_id: "0004de42",
-      cookie: process.env.YOUTUBE_COOKIE,
+      cookie: config.YOUTUBE_COOKIE,
     });
   }
   return ineerTubeInstance;
