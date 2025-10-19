@@ -2,6 +2,8 @@ import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
 import path from "path";
 import fs from "fs";
+import { getFormattedTrackDescription } from "../../utils/helpers/getFormattedTrackDescription";
+import { useMainPlayer, useQueue } from "discord-player";
 
 type FileData = {
   bossTracks: string[];
@@ -47,10 +49,34 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
     fs.writeFileSync(fullPath, JSON.stringify(fileData));
   }
 
+  const player = useMainPlayer();
+  const queue = useQueue();
+
+  const result = await player.search(url, {
+    requestedBy: interaction.user,
+  });
+
+  if (result.tracks.length === 0) {
+    const data = buildEmbedMessage({
+      title: "No track found",
+      description:
+        "No track with that URL was found, please make sure the URL is valid.",
+      color: "error",
+      ephemeral: true,
+    });
+
+    return interaction.reply(data);
+  }
+
   const data = buildEmbedMessage({
-    title: "Added successfully",
-    description: `${interaction.user.toString()} added a track to the boss music library!`,
+    title: `Added successfully`,
+    description: `${interaction.user.toString()} added ${getFormattedTrackDescription(
+      result.tracks[0],
+      queue
+    )} to the boss music library!`,
+    thumbnail: result.tracks[0]?.thumbnail,
     color: "success",
   });
-  await interaction.reply(data);
+
+  return interaction.reply(data);
 };

@@ -2,7 +2,7 @@ import { GuildQueue, Track } from "discord-player";
 
 export const getFormattedTrackDescription = (
   track: Track | null,
-  queue: GuildQueue
+  queue: GuildQueue | null
 ) => {
   if (!track) return "N/A";
 
@@ -17,6 +17,8 @@ export const getFormattedTrackDescription = (
   } else {
     desc = `[${track.title}](${track.url})`;
   }
+
+  if (!queue) return desc;
 
   if (queue.currentTrack?.id === track.id) {
     return `${desc} [${totalTime}]`;
