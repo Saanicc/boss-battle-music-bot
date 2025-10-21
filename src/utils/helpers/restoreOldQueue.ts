@@ -35,8 +35,7 @@ export const restoreOldQueue = async ({
 
   const newQueue = player.nodes.create(guild, {
     metadata: { channel: textChannel, voiceChannel },
-    leaveOnEnd: true,
-    leaveOnEndCooldown: 60000,
+    leaveOnEnd: false,
     leaveOnEmpty: true,
     leaveOnEmptyCooldown: 15000,
   });

@@ -50,8 +50,7 @@ export const execute = async (
       channel: interaction.channel,
       voiceChannel: channel,
     },
-    leaveOnEnd: true,
-    leaveOnEndCooldown: 60000,
+    leaveOnEnd: false,
     leaveOnEmpty: true,
     leaveOnEmptyCooldown: 15000,
   });

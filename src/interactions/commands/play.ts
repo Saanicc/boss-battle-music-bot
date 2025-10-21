@@ -52,17 +52,34 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
       return interaction.reply(data);
     }
 
-    const track = result.tracks[0];
-    normalQueue.addTrack(track);
+    let message = null;
 
-    const data = buildEmbedMessage({
-      title: `Queued at position #${normalQueue.tracks.size}`,
-      description: `${getFormattedTrackDescription(track, normalQueue)}`,
-      thumbnail: result.tracks[0].thumbnail,
-      footerText: "Not the correct track? Try being more specific",
-      color: "queue",
-    });
-    interaction.reply(data);
+    if (result.hasPlaylist()) {
+      normalQueue.addTrack(result.playlist?.tracks ?? []);
+
+      message = buildEmbedMessage({
+        title: `Queued`,
+        description: `[${result.playlist?.title}](${result.playlist?.url}) with ${result.playlist?.tracks.length} tracks`,
+        thumbnail: result.playlist?.thumbnail,
+        footerText:
+          "Not the correct track? Try being more specific or enter a URL",
+        color: "queue",
+      });
+    } else {
+      const track = result.tracks[0];
+      normalQueue.addTrack(track);
+
+      message = buildEmbedMessage({
+        title: `Queued at position #${normalQueue.tracks.size}`,
+        description: `${getFormattedTrackDescription(track, normalQueue)}`,
+        thumbnail: result.tracks[0].thumbnail,
+        footerText:
+          "Not the correct track? Try being more specific or enter a URL",
+        color: "queue",
+      });
+    }
+
+    interaction.reply(message);
 
     if (!normalQueue.connection) await normalQueue.connect(channel);
     if (!normalQueue.isPlaying()) await normalQueue.node.play();
