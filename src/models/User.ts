@@ -4,12 +4,10 @@ const userSchema = new mongoose.Schema({
   guildId: {
     type: String,
     required: true,
-    index: true,
   },
   userId: {
     type: String,
     required: true,
-    unique: true,
   },
   xp: {
     type: Number,
