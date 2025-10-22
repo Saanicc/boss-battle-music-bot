@@ -8,6 +8,7 @@ import { buildNowPlayingMessage } from "../utils/embeds/nowPlayingMessage";
 import { musicPlayerMessage } from "../services/musicPlayerMessage";
 import { buildEmbedMessage } from "../utils/embeds/embedMessage";
 import { delay } from "../utils/helpers/utils";
+import { getTrackRequestedByFooterText } from "../utils/helpers/getTrackRequestedByText";
 
 export const registerPlayerEvents = (player: Player) => {
   player.events.on(GuildQueueEvent.PlayerStart, async (queue, track) => {
@@ -19,7 +20,12 @@ export const registerPlayerEvents = (player: Player) => {
 
     await delay(1000);
 
-    const data = buildNowPlayingMessage(track, true, queue);
+    const footerText = await getTrackRequestedByFooterText(
+      track.requestedBy,
+      queue.guild.id
+    );
+
+    const data = buildNowPlayingMessage(track, true, queue, footerText);
     const msg = await channel.send(data as MessageCreateOptions);
     musicPlayerMessage.set(msg);
 
@@ -27,7 +33,12 @@ export const registerPlayerEvents = (player: Player) => {
       setInterval(async () => {
         if (!queue.node.isPlaying()) return;
 
-        const updateData = buildNowPlayingMessage(track, true, queue);
+        const updateData = buildNowPlayingMessage(
+          track,
+          true,
+          queue,
+          footerText
+        );
         try {
           await musicPlayerMessage.edit(updateData as MessageEditOptions);
         } catch (err) {
@@ -40,7 +51,17 @@ export const registerPlayerEvents = (player: Player) => {
   player.events.on(GuildQueueEvent.PlayerPause, async (queue) => {
     if (!queue.currentTrack) return;
 
-    const data = buildNowPlayingMessage(queue.currentTrack, false, queue);
+    const footerText = await getTrackRequestedByFooterText(
+      queue.currentTrack.requestedBy,
+      queue.guild.id
+    );
+
+    const data = buildNowPlayingMessage(
+      queue.currentTrack,
+      false,
+      queue,
+      footerText
+    );
 
     await musicPlayerMessage.edit(data as MessageEditOptions);
   });

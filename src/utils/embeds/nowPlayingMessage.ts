@@ -35,7 +35,8 @@ const createProgressBar = (queue: GuildQueue, size = 16) => {
 export const buildNowPlayingMessage = (
   track: Track,
   isPlaying: boolean,
-  queue: GuildQueue
+  queue: GuildQueue,
+  footerText: string
 ): MessageCreateOptions => {
   const isBossQueue =
     (isPlaying || !isPlaying) && queueManager.getQueueType() === "boss";
@@ -63,9 +64,7 @@ ${getFormattedTrackDescription(track, queue)}
 ${progressBar}
 `);
 
-  const requestedByText = new TextDisplayBuilder().setContent(
-    `Track requested by ${track.requestedBy?.toString() ?? "Unknown"}`
-  );
+  const requestedByText = new TextDisplayBuilder().setContent(footerText);
 
   const thumbnail = new ThumbnailBuilder().setURL(track.thumbnail);
 

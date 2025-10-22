@@ -4,7 +4,7 @@ export type XPGrantingCommand = "play_boss_music" | "play";
 
 const XP_BASE = 5;
 
-const getRequiredXP = (level: number) => {
+export const getRequiredXP = (level: number) => {
   return Math.floor(10 + level * 12);
 };
 
@@ -77,3 +77,6 @@ export const addXP = async (
 
   return { user, gainedXP, leveledUp, levelsGained, treasure };
 };
+
+export const getXPToNextRank = (level: number, xp: number) =>
+  getRequiredXP(level) - xp;

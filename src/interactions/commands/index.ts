@@ -4,6 +4,7 @@ import * as play from "./play";
 import * as help from "./help";
 import * as queue from "./queue";
 import * as skip from "./skip";
+import * as rank from "./rank";
 
 export const commands = {
   help,
@@ -12,4 +13,5 @@ export const commands = {
   add_track: addTrack,
   queue,
   skip,
+  rank,
 };
