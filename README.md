@@ -32,7 +32,7 @@ Summon it anytime to power up your gameplay with cinematic, high-energy music. �
 | `/add_track`       | Add new track to the boss music collection          |
 | `/help`            | Shows info about available commands                 |
 | `/queue`           | Displays the next five upcoming tracks in the queue |
-| `/skip`             | Skip the currently playing song.                    |
+| `/skip`            | Skip the currently playing song.                    |
 
 ---
 
@@ -71,10 +71,16 @@ npm install
 Create a .env file in the root folder:
 
 ```
+# Discord bot
 DISCORD_TOKEN=your-bot-token
 CLIENT_ID=your-client-id
 SPOTIFY_CLIENT_ID=your-spotify-client-id
 SPOTIFY_CLIENT_SECRET=your-spotify-client-secret
+YOUTUBE_COOKIE=your-youtube-cookie
+
+# Mongo DB
+MONGO_INITDB_DATABASE=musicbotdb                  # Change if you want
+MONGO_URI=mongodb://localhost:27017/musicbotdb    # Authentication disabled by default
 ```
 
 ### 4. Run the bot
@@ -85,11 +91,9 @@ For local development:
 npm run dev
 ```
 
-Or with Docker Compose:
+## ⚙️ Docker Compose Setup
 
-```bash
-docker compose up -d
-```
+A full guide on building and running the bot using Docker Compose can be found [here](./DOCKER_README.md)
 
 ## 💾 Volumes
 
