@@ -8,6 +8,7 @@ import {
   SeparatorBuilder,
   MediaGalleryBuilder,
   MediaGalleryItemBuilder,
+  BaseMessageOptions,
 } from "discord.js";
 import { embedColors, Color } from "../constants/constants";
 
@@ -29,7 +30,7 @@ export const buildEmbedMessage = ({
   imageUrl?: string;
   thumbnail?: string;
   footerText?: string;
-}): InteractionReplyOptions => {
+}): BaseMessageOptions => {
   const getFontSize = () => {
     switch (titleFontSize) {
       case "lg":

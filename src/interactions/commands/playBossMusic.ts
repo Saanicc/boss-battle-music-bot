@@ -11,6 +11,7 @@ import { savePreviousQueue } from "../../utils/helpers/saveQueueData";
 import { getBossTracks } from "../../utils/helpers/getBossTracks";
 import { useMainPlayer, useQueue } from "discord-player";
 import { delay } from "../../utils/helpers/utils";
+import { updateUserLevel } from "../../utils/helpers/updateUserLevel";
 
 export const data = new SlashCommandBuilder()
   .setName("play_boss_music")
@@ -85,6 +86,8 @@ export const execute = async (
     });
 
     await interaction.reply(data);
+
+    updateUserLevel(interaction, guild.id, "play_boss_music");
 
     await delay(500);
 

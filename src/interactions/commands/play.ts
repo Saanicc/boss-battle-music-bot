@@ -2,6 +2,7 @@ import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
 import { useMainPlayer, useQueue } from "discord-player";
 import { getFormattedTrackDescription } from "../../utils/helpers/getFormattedTrackDescription";
+import { updateUserLevel } from "../../utils/helpers/updateUserLevel";
 
 export const data = new SlashCommandBuilder()
   .setName("play")
@@ -80,6 +81,8 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
     }
 
     interaction.reply(message);
+
+    await updateUserLevel(interaction, guild.id, "play");
 
     if (!normalQueue.connection) await normalQueue.connect(channel);
     if (!normalQueue.isPlaying()) await normalQueue.node.play();
