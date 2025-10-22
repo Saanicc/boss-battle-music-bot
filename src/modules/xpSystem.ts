@@ -45,6 +45,7 @@ export const addXP = async (
     return { ...user.toObject(), noXP: true };
   }
 
+  const previousLevel = user.level;
   let multiplier = commandName === "play_boss_music" ? 2 : 1;
   let gainedXP = XP_BASE * multiplier;
   let treasure = false;
@@ -75,7 +76,15 @@ export const addXP = async (
 
   await user.save();
 
-  return { user, gainedXP, leveledUp, levelsGained, treasure };
+  return {
+    user,
+    gainedXP,
+    leveledUp,
+    levelsGained,
+    treasure,
+    previousLevel,
+    noXP: false,
+  };
 };
 
 export const getXPToNextRank = (level: number, xp: number) =>
