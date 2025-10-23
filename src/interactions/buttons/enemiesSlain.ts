@@ -41,10 +41,10 @@ export const execute = async (interaction: ButtonInteraction) => {
         "Nothing to restore, leaving voice chat. Please queue some new track(s) to resume playback!",
     });
     await musicPlayerMessage.delete();
-    await (interaction.channel as TextChannel).send(
+    queueManager.setQueueType("normal");
+    return await (interaction.channel as TextChannel).send(
       data as MessageCreateOptions
     );
-    return;
   }
 
   const data = buildEmbedMessage({

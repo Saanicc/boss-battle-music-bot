@@ -1,7 +1,6 @@
 import {
   ButtonInteraction,
   CommandInteraction,
-  InteractionType,
   SlashCommandBuilder,
   TextChannel,
 } from "discord.js";
@@ -22,6 +21,7 @@ export const data = new SlashCommandBuilder()
 export const execute = async (
   interaction: CommandInteraction | ButtonInteraction
 ) => {
+  await interaction.deferReply();
   const player = useMainPlayer();
   const queue = useQueue();
   const guildMember = await interaction.guild?.members.fetch(
@@ -35,8 +35,7 @@ export const execute = async (
       color: "error",
       ephemeral: true,
     });
-    await interaction.reply(data);
-    return;
+    return interaction.followUp(data);
   }
 
   const guild = guildMember.guild;
@@ -87,16 +86,14 @@ export const execute = async (
       color: "bossMode",
     });
 
-    if (interaction.type === InteractionType.ApplicationCommand)
-      await interaction.reply(data);
-    else await (interaction.channel as TextChannel).send(data);
-
     updateUserLevel(interaction, guild.id, "play_boss_music");
 
     await delay(500);
 
     if (!newQueue.connection) await newQueue.connect(channel);
     if (!newQueue.isPlaying()) await newQueue.node.play();
+
+    await interaction.followUp(data);
   } catch (err) {
     console.error(err);
     await (interaction.channel as TextChannel).send(

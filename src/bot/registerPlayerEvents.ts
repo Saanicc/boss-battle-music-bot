@@ -16,7 +16,9 @@ export const registerPlayerEvents = (player: Player) => {
 
     musicPlayerMessage.clearProgressInterval();
 
-    await musicPlayerMessage.delete();
+    try {
+      await musicPlayerMessage.delete();
+    } catch {}
 
     await delay(1000);
 
