@@ -27,6 +27,9 @@ Here's how to summon the power of music and unleash epic soundtracks:
 
 ⏭️ **/skip**
 > Skip the currently playing song.
+
+🎚️ **/rank**
+> Check your own or someone else's current DJ rank.
 `;
 
   const embedMessage = buildEmbedMessage({
