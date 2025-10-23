@@ -17,7 +17,9 @@ export const musicPlayerMessage = {
   },
 
   async delete() {
-    if (nowPlayingMessage) await nowPlayingMessage.delete();
+    if (!nowPlayingMessage) return;
+
+    await nowPlayingMessage.delete();
   },
 
   clearProgressInterval() {

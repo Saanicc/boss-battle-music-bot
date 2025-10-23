@@ -8,7 +8,7 @@ export const savePreviousQueue = async (queue: GuildQueue, guildId: string) => {
 
   queueManager.store(
     guildId,
-    [...queue.tracks.data],
+    queue.tracks.toArray(),
     "normal",
     queue.currentTrack ?? undefined,
     progress,

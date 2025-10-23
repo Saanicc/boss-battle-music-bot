@@ -1,7 +1,9 @@
 import {
   ButtonInteraction,
   CommandInteraction,
+  InteractionType,
   SlashCommandBuilder,
+  TextChannel,
 } from "discord.js";
 import { getAllMusicFiles } from "../../utils/helpers/getAllMusicFiles";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
@@ -40,8 +42,8 @@ export const execute = async (
   const guild = guildMember.guild;
 
   if (queue) {
-    queue.node.stop();
     await savePreviousQueue(queue, guild.id);
+    queue.node.stop();
     (queue.metadata as any).isSwithing = true;
     queue.delete();
   }
@@ -85,7 +87,9 @@ export const execute = async (
       color: "bossMode",
     });
 
-    await interaction.reply(data);
+    if (interaction.type === InteractionType.ApplicationCommand)
+      await interaction.reply(data);
+    else await (interaction.channel as TextChannel).send(data);
 
     updateUserLevel(interaction, guild.id, "play_boss_music");
 
@@ -95,6 +99,8 @@ export const execute = async (
     if (!newQueue.isPlaying()) await newQueue.node.play();
   } catch (err) {
     console.error(err);
-    await interaction.reply("❌ Something went wrong while trying to play.");
+    await (interaction.channel as TextChannel).send(
+      "❌ Something went wrong while trying to play."
+    );
   }
 };
