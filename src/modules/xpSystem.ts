@@ -2,10 +2,11 @@ import { User, UserType } from "../models/User";
 
 export type XPGrantingCommand = "play_boss_music" | "play";
 
-const XP_BASE = 5;
+const XP_BASE = 2;
 
 export const getRequiredXP = (level: number) => {
-  return Math.floor(10 + level * 12);
+  const formula = 10 + (level * 12) ** 1.2;
+  return Math.floor(formula);
 };
 
 const levelUpUser = (user: UserType, gainedXP: number) => {
@@ -46,8 +47,7 @@ export const addXP = async (
   }
 
   const previousLevel = user.level;
-  let multiplier = commandName === "play_boss_music" ? 2 : 1;
-  let gainedXP = XP_BASE * multiplier;
+  let gainedXP = XP_BASE;
   let treasure = false;
   let roll = Math.random();
 
