@@ -1,7 +1,7 @@
 import { User } from "../../models/User";
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { getRequiredXP, getXPToNextRank } from "../../modules/xpSystem";
-import { getRankTitle } from "../../modules/rankSystem";
+import { getRankImage, getRankTitle } from "../../modules/rankSystem";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
 
 export const data = new SlashCommandBuilder()
@@ -50,8 +50,11 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
   const message = buildEmbedMessage({
     title: `${targetUser.toString()}'s Rank`,
+    titleFontSize: "md",
+    thumbnail: getRankImage(user.level),
     description: `
-### Level ${user.level}     Rank: ${rankTitle}
+**Level: ** ${user.level}
+**Rank:** ${rankTitle}
 
 **XP to Next Rank**
 ${xpToNext} XP

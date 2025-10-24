@@ -1,6 +1,6 @@
 import { ButtonInteraction, CommandInteraction, TextChannel } from "discord.js";
 import { addXP, XPGrantingCommand } from "../../modules/xpSystem";
-import { getRankTitle } from "../../modules/rankSystem";
+import { getRankTitleWithEmoji } from "../../modules/rankSystem";
 import { buildEmbedMessage } from "../embeds/embedMessage";
 import { getTreasureInfo } from "./getTreasureMessage";
 import { emoji } from "../constants/emojis";
@@ -35,8 +35,8 @@ export const updateUserLevel = async (
   }
 
   if (leveledUp) {
-    const oldRank = getRankTitle(previousLevel);
-    const newRank = getRankTitle(user.level);
+    const oldRank = getRankTitleWithEmoji(previousLevel);
+    const newRank = getRankTitleWithEmoji(user.level);
 
     let rankMessage = "";
     if (oldRank !== newRank) {

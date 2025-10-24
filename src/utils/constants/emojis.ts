@@ -12,15 +12,6 @@ type Emoji =
 
 type XpEmoji = "coins" | "gold" | "rare" | "epic" | "legendary";
 
-type RankEmoji =
-  | "grandmaster"
-  | "elite"
-  | "pro"
-  | "specialist"
-  | "rising"
-  | "enthusiast"
-  | "listener";
-
 export const emoji: Record<Emoji, string> = {
   play: "<:play:1431066649116672171>",
   pause: "<:pause:1431066657249558669>",
@@ -32,16 +23,6 @@ export const emoji: Record<Emoji, string> = {
   info: "<:info:1431066661661970533>",
   fight: "<:swords:1431064938922901625>",
   victory: "<:trophy:1431064937123283135>",
-};
-
-export const rankEmoji: Record<RankEmoji, string> = {
-  grandmaster: "<:level7:1431064932920725636>",
-  elite: "<:level6:1431064934590054481>",
-  pro: "<:level5:1431064931721285753>",
-  specialist: "<:level4:1431064929670009004>",
-  rising: "<:level3:1431064928579485766>",
-  enthusiast: "<:level2:1431064927006625862>",
-  listener: "<:level1:1431064925375168582>",
 };
 
 export const xpEmoji: Record<XpEmoji, string> = {
