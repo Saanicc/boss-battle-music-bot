@@ -1,9 +1,10 @@
 import { ButtonBuilder, ButtonInteraction, ButtonStyle } from "discord.js";
 import { useQueue } from "discord-player";
+import { emoji } from "../../utils/constants/emojis";
 
 export const resumeButton = new ButtonBuilder()
   .setCustomId("resume")
-  .setLabel("⏵")
+  .setEmoji(emoji.play)
   .setStyle(ButtonStyle.Success);
 
 export const execute = async (interaction: ButtonInteraction) => {

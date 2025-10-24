@@ -5,10 +5,11 @@ import {
 } from "discord.js";
 import { useQueue } from "discord-player";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
+import { emoji } from "../../utils/constants/emojis";
 
 export const nextButton = new ButtonBuilder()
   .setCustomId("next")
-  .setLabel(">")
+  .setEmoji(emoji.next)
   .setStyle(ButtonStyle.Primary);
 
 export async function execute(interaction: ChatInputCommandInteraction) {

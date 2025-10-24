@@ -11,10 +11,11 @@ import { delay } from "../../utils/helpers/utils";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
 import { musicPlayerMessage } from "../../services/musicPlayerMessage";
 import { useQueue } from "discord-player";
+import { emoji } from "../../utils/constants/emojis";
 
 export const enemiesSlainButton = new ButtonBuilder()
   .setCustomId("enemies_slain")
-  .setLabel("🏆")
+  .setEmoji(emoji.victory)
   .setStyle(ButtonStyle.Secondary);
 
 export const execute = async (interaction: ButtonInteraction) => {

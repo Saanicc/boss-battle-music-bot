@@ -1,5 +1,6 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
+import { emoji } from "../../utils/constants/emojis";
 
 export const data = new SlashCommandBuilder()
   .setName("help")
@@ -7,33 +8,33 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction: ChatInputCommandInteraction) {
   const description = `
-Welcome, **brave listener!** ⚔️  
+Welcome, **brave listener!**
 Here's how to summon the power of music and unleash epic soundtracks:
 
-🎵 **/play**
+**/play**
 > Play any song by name or URL.  
 > *Example:* \`/play query: Never Gonna Give You Up\`
 
-🔥 **/play_boss_music**
+**/play_boss_music**
 > Instantly summon **EPIC boss battle music**!  
 > Perfect for intense raids, duels, or just feeling awesome.
 
-💾 **/add_track**
+**/add_track**
 > Add a new **boss battle track** to the bot's arsenal. 
 > *Example:* \`/add_track url:https://spotify.com/track/abc123\`
 
-🧾 **/queue**
+**/queue**
 > Displays the next five upcoming tracks in the queue.
 
-⏭️ **/skip**
+**/skip**
 > Skip the currently playing song.
 
-🎚️ **/rank**
+**/rank**
 > Check your own or someone else's current DJ rank.
 `;
 
   const embedMessage = buildEmbedMessage({
-    title: `⚔️ ${interaction.client.user.username}'s help menu`,
+    title: `${emoji.info} ${interaction.client.user.username}'s help menu ${emoji.info}`,
     titleFontSize: "md",
     color: "info",
     description,

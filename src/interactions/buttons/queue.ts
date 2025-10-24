@@ -1,9 +1,10 @@
 import { ButtonBuilder, ButtonInteraction, ButtonStyle } from "discord.js";
 import { execute as showQueue } from "../commands/queue";
+import { emoji } from "../../utils/constants/emojis";
 
 export const queueButton = new ButtonBuilder()
   .setCustomId("queue")
-  .setLabel("🧾")
+  .setEmoji(emoji.queue)
   .setStyle(ButtonStyle.Secondary);
 
 export const execute = async (interaction: ButtonInteraction) => {

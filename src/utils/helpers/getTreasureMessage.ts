@@ -1,23 +1,26 @@
+import { xpEmoji } from "../constants/emojis";
+
 export const getTreasureMessage = (userId: string, gainedXP: number) => {
-  let msg;
   if (!gainedXP) return;
+
+  let message: string;
 
   switch (true) {
     case gainedXP >= 100:
-      msg = `🌟 **LEGENDARY FIND!** ${userId} unearthed an ancient relic granting 100x XP!`;
+      message = `${xpEmoji.legendary} **LEGENDARY FIND!** ${userId} unearthed an ancient relic granting 100× XP!`;
       break;
     case gainedXP >= 50:
-      msg = `🏆 **Epic Treasure!** ${userId} struck gold for 50x XP!`;
+      message = `${xpEmoji.epic} **Epic Treasure!** ${userId} struck diamonds granting 50× XP!`;
       break;
     case gainedXP >= 25:
-      msg = `💎 **Rare Find!** ${userId}'s adventure yields 25x XP!`;
+      message = `${xpEmoji.rare} **Rare Find!** ${userId} discovered a hidden chest containing 25× XP!`;
       break;
     case gainedXP >= 10:
-      msg = `✨ ${userId} discovered a hidden chest with 10x XP!`;
+      message = `${xpEmoji.gold} ${userId} found a golden ingot granting 10× XP!`;
       break;
     default:
-      msg = `💰 ${userId} found some shiny coins granting 2.5x XP!`;
+      message = `${xpEmoji.coins} ${userId} found some shiny coins granting 2.5× XP!`;
   }
 
-  return `${msg} (+${gainedXP})`;
+  return `${message} (+${gainedXP} XP)`;
 };

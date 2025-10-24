@@ -6,6 +6,7 @@ import {
 import { useQueue } from "discord-player";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
 import { getFormattedTrackDescription } from "../../utils/helpers/getFormattedTrackDescription";
+import { emoji } from "../../utils/constants/emojis";
 
 export const data = new SlashCommandBuilder()
   .setName("queue")
@@ -43,7 +44,7 @@ export async function execute(
   };
 
   const data = buildEmbedMessage({
-    title: "⏵ Now Playing",
+    title: `${emoji.play} Now Playing`,
     description: `
 ${getFormattedTrackDescription(currentTrack, queue)}
     

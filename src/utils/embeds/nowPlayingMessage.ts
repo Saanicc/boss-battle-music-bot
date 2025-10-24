@@ -21,6 +21,7 @@ import { getFormattedTrackDescription } from "../helpers/getFormattedTrackDescri
 import { queueButton } from "../../interactions/buttons/queue";
 import { nextButton } from "../../interactions/buttons/next";
 import { previousButton } from "../../interactions/buttons/previous";
+import { emoji } from "../constants/emojis";
 
 const createProgressBar = (queue: GuildQueue, size = 16) => {
   return queue.node.createProgressBar({
@@ -57,7 +58,9 @@ export const buildNowPlayingMessage = (
   const container = new ContainerBuilder();
 
   const trackInfoText = new TextDisplayBuilder().setContent(`
-### ${isPlaying ? "⏵ Now Playing" : "⏸ Music Stopped"}  
+### ${
+    isPlaying ? `${emoji.play} Now Playing` : `${emoji.pause} Music Stopped`
+  }  
 ${getFormattedTrackDescription(track, queue)}
 
 **Progress**

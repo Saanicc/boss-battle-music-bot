@@ -4,7 +4,7 @@ import { useQueue } from "discord-player";
 
 export const stopButton = new ButtonBuilder()
   .setCustomId("stop")
-  .setLabel("⏹")
+  .setEmoji("⏹")
   .setStyle(ButtonStyle.Danger);
 
 export const execute = async (interaction: ButtonInteraction) => {

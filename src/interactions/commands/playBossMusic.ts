@@ -13,6 +13,7 @@ import { getBossTracks } from "../../utils/helpers/getBossTracks";
 import { useMainPlayer, useQueue } from "discord-player";
 import { delay } from "../../utils/helpers/utils";
 import { updateUserLevel } from "../../utils/helpers/updateUserLevel";
+import { emoji } from "../../utils/constants/emojis";
 
 export const data = new SlashCommandBuilder()
   .setName("play_boss_music")
@@ -80,7 +81,7 @@ export const execute = async (
     queueManager.setQueueType("boss");
 
     const data = buildEmbedMessage({
-      title: "⚔️ Time to slay some enemies!",
+      title: `${emoji.fight} Time to slay some enemies! ${emoji.fight}`,
       titleFontSize: "lg",
       imageUrl: await getRandomFightGif(),
       color: "bossMode",

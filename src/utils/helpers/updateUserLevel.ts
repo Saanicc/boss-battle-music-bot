@@ -3,6 +3,7 @@ import { addXP, XPGrantingCommand } from "../../modules/xpSystem";
 import { getRankTitle } from "../../modules/rankSystem";
 import { buildEmbedMessage } from "../embeds/embedMessage";
 import { getTreasureMessage } from "./getTreasureMessage";
+import { emoji } from "../constants/emojis";
 
 export const updateUserLevel = async (
   interaction: CommandInteraction | ButtonInteraction,
@@ -23,7 +24,7 @@ export const updateUserLevel = async (
 
   if (treasure) {
     const message = buildEmbedMessage({
-      title: "🎁 Hidden tresure found!",
+      title: `${emoji.treasure} Hidden tresure found!`,
       description: getTreasureMessage(interaction.user.toString(), gainedXP),
     });
     await (interaction.channel as TextChannel).send(message);
@@ -39,7 +40,7 @@ export const updateUserLevel = async (
     }
 
     const message = buildEmbedMessage({
-      title: "⬆️ Level up!",
+      title: emoji.levelup,
       description: `${interaction.user.toString()} gained **${levelsGained} ${
         levelsGained > 1 ? "levels" : "level"
       }** and is now **Level ${user.level}**!${rankMessage}`,

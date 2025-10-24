@@ -11,5 +11,5 @@ export const getTrackRequestedByFooterText = async (
 
   return `Track requested by ${
     discordUser?.toString() ?? "Unknown"
-  } - ${userRank}`;
+  } — ${userRank}`;
 };
