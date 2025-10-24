@@ -47,7 +47,7 @@ export const rankEmoji: Record<RankEmoji, string> = {
 export const xpEmoji: Record<XpEmoji, string> = {
   legendary: "<:chalice:1431073260551798877>",
   epic: "<:diamond:1431072331186442380>",
-  rare: "<:gold:1431072329714110545>",
-  gold: "<:chest:1431073259499159653>",
+  rare: "<:chest:1431073259499159653>",
+  gold: "<:gold:1431072329714110545>",
   coins: "<:coins:1431072332386013316>",
 };

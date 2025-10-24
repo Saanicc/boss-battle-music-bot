@@ -2,7 +2,7 @@ import { ButtonInteraction, CommandInteraction, TextChannel } from "discord.js";
 import { addXP, XPGrantingCommand } from "../../modules/xpSystem";
 import { getRankTitle } from "../../modules/rankSystem";
 import { buildEmbedMessage } from "../embeds/embedMessage";
-import { getTreasureMessage } from "./getTreasureMessage";
+import { getTreasureInfo } from "./getTreasureMessage";
 import { emoji } from "../constants/emojis";
 
 export const updateUserLevel = async (
@@ -23,9 +23,13 @@ export const updateUserLevel = async (
   if (noXP) return; // cooldown
 
   if (treasure) {
+    const treasureInfo = getTreasureInfo(interaction.user.toString(), gainedXP);
+    if (!treasureInfo) return;
+
+    const { title, description } = treasureInfo;
     const message = buildEmbedMessage({
-      title: `${emoji.treasure} Hidden tresure found!`,
-      description: getTreasureMessage(interaction.user.toString(), gainedXP),
+      title,
+      description,
     });
     await (interaction.channel as TextChannel).send(message);
   }
