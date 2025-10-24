@@ -13,7 +13,7 @@ import {
 import { enemiesSlainButton } from "../../interactions/buttons/enemiesSlain";
 import { slayEnemiesButton } from "../../interactions/buttons/slayEnemies";
 import { stopButton } from "../../interactions/buttons/stop";
-import { embedColors } from "../constants/constants";
+import { colors } from "../constants/colors";
 import { queueManager } from "../../services/queueManager";
 import { pauseButton } from "../../interactions/buttons/pause";
 import { resumeButton } from "../../interactions/buttons/resume";
@@ -97,10 +97,10 @@ ${progressBar}
   container.addTextDisplayComponents(requestedByText);
   container.setAccentColor(
     isPlaying && !isBossQueue
-      ? embedColors.nowPlaying
+      ? colors.nowPlaying
       : isPlaying && isBossQueue
-      ? embedColors.bossMode
-      : embedColors.paused
+      ? colors.bossMode
+      : colors.paused
   );
 
   return {

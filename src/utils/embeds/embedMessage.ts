@@ -10,7 +10,7 @@ import {
   MediaGalleryItemBuilder,
   BaseMessageOptions,
 } from "discord.js";
-import { embedColors, Color } from "../constants/constants";
+import { colors as colorConstant, ColorType } from "../constants/colors";
 
 export const buildEmbedMessage = ({
   title,
@@ -24,7 +24,7 @@ export const buildEmbedMessage = ({
 }: {
   title: string;
   titleFontSize?: "lg" | "md" | "sm";
-  color?: Color;
+  color?: ColorType;
   ephemeral?: boolean;
   description?: string;
   imageUrl?: string;
@@ -73,7 +73,7 @@ export const buildEmbedMessage = ({
   }
 
   if (color) {
-    container.setAccentColor(embedColors[color]);
+    container.setAccentColor(colorConstant[color]);
   }
 
   const getFlags = () => {

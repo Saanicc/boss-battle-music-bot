@@ -1,4 +1,4 @@
-export type Color =
+export type ColorType =
   | "nowPlaying"
   | "paused"
   | "queue"
@@ -9,9 +9,9 @@ export type Color =
   | "bossMode"
   | "default";
 
-export type EmbedColors = Record<Color, number>;
+export type Colors = Record<ColorType, number>;
 
-export const embedColors: EmbedColors = {
+export const colors: Colors = {
   nowPlaying: 0x5865f2,
   paused: 0x7289da,
   queue: 0x3ba55d,
