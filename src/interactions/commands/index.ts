@@ -5,6 +5,7 @@ import * as help from "./help";
 import * as queue from "./queue";
 import * as skip from "./skip";
 import * as rank from "./rank";
+import * as leaderboard from "./leaderboard";
 
 export const commands = {
   help,
@@ -14,4 +15,5 @@ export const commands = {
   queue,
   skip,
   rank,
+  leaderboard,
 };

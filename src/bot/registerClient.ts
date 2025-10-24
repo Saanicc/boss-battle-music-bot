@@ -7,7 +7,11 @@ import { handleInteraction } from "../utils/helpers/handleInteraction";
 
 export const registerDiscordClient = () => {
   const client = new Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
+    intents: [
+      GatewayIntentBits.Guilds,
+      GatewayIntentBits.GuildVoiceStates,
+      GatewayIntentBits.GuildMembers,
+    ],
   });
 
   client.once("clientReady", async () => {
