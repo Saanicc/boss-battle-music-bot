@@ -1,7 +1,7 @@
 import { User } from "../../models/User";
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { getRequiredXP, getXPToNextRank } from "../../modules/xpSystem";
-import { getRankImage, getRankTitle } from "../../modules/rankSystem";
+import { getRankImage, getRankTitle, RANKS } from "../../modules/rankSystem";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
 
 export const data = new SlashCommandBuilder()
@@ -53,14 +53,14 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     titleFontSize: "md",
     thumbnail: getRankImage(user.level),
     description: `
-**Level: ** ${user.level}
+**Level: ** ${user.level === RANKS[0].minLevel ? "Max" : user.level}
 **Rank:** ${rankTitle}
 
-**XP to Next Rank**
-${xpToNext} XP
+**XP to Next Level**
+${user.level === RANKS[0].minLevel ? "Max Level reached" : `${xpToNext} XP`}
 
 **Progress**
-${xpBar}
+${user.level === RANKS[0].minLevel ? createXPBar(1, 1) : `${xpBar}`}
 
 **Tracks queued:** ${tracksQueued}
 **Boss music plays:** ${timesQueuedBossTracks}
