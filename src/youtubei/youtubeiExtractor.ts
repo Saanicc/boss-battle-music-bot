@@ -25,10 +25,15 @@ export class YoutubeSabrExtractor extends BaseExtractor {
   static identifier = "com.itsmaat.discord-player.youtube-sabr";
   innertube: any;
   _stream: any;
+  cookies: any;
+  options: any;
+  logSabrEvents: any;
 
   async activate() {
     this.protocols = ["youtube", "yt"];
-    this.innertube = (await getInnertube(this.options)) as any;
+    this.cookies = this.options.cookies;
+    this.logSabrEvents = this.options.logSabrEvents;
+    this.innertube = await getInnertube(this.cookies);
 
     const fn = (this.options as any).createStream;
     if (typeof fn === "function") {
@@ -53,24 +58,41 @@ export class YoutubeSabrExtractor extends BaseExtractor {
 
   async handle(query: any, context: any) {
     try {
+      if (!isUrl(query)) {
+        const search = await this.innertube.search(query);
+        const videos = search.videos.filter((v: any) => v.type === "Video");
+
+        const tracks = [];
+        for (const video of videos.slice(0, 10)) {
+          const info = await this.innertube.getBasicInfo(video.id);
+          const durationMs = (info.basic_info?.duration ?? 0) * 1000;
+
+          tracks.push(
+            new Track(context.player, {
+              title: info.basic_info?.title ?? `YouTube:${video.id}`,
+              author: info.basic_info?.author ?? null,
+              url: `https://www.youtube.com/watch?v=${video.id}`,
+              thumbnail: video.thumbnails[0]?.url,
+              duration: Util.buildTimeCode(Util.parseMS(durationMs)),
+              source: "youtube-sabr" as TrackSource,
+              requestedBy: context.requestedBy ?? null,
+              raw: {
+                basicInfo: info,
+                live: info.basic_info?.is_live || false,
+              },
+            })
+          );
+        }
+
+        return this.createResponse(null, tracks);
+      }
       let isPlaylist = false;
       let playlistId = null;
-
-      try {
-        const urlObj = new URL(query);
-
-        const hasList = urlObj.searchParams.has("list");
-        const isShortLink = /(^|\.)youtu\.be$/i.test(urlObj.hostname);
-
-        isPlaylist = hasList && !isShortLink;
-        playlistId = isPlaylist ? urlObj.searchParams.get("list") : null;
-      } catch {
-        // fallback for non-URL queries (or plain playlist ids)
-        const m = query.match(/[?&]list=([a-zA-Z0-9_-]+)/);
-
-        isPlaylist = !!m;
-        playlistId = m?.[1] ?? null;
-      }
+      const urlObj = new URL(query);
+      const hasList = urlObj.searchParams.has("list");
+      const isShortLink = /(^|\.)youtu\.be$/i.test(urlObj.hostname);
+      isPlaylist = hasList && !isShortLink;
+      playlistId = isPlaylist ? urlObj.searchParams.get("list") : null;
 
       // If playlist detected
       if (isPlaylist && playlistId) {
@@ -177,26 +199,8 @@ export class YoutubeSabrExtractor extends BaseExtractor {
         return this.createResponse(dpPlaylist, plTracks);
       }
 
-      const searchYoutubeWithQueryString = async (
-        query: string
-      ): Promise<any> => {
-        const search = await this.innertube.search(query);
-        if (search.results.length === 0) return;
-
-        return search.results[0];
-      };
-
       // Otherwise treat as single video
-      let videoId = null;
-
-      try {
-        videoId = extractVideoId(query);
-      } catch (err) {
-        if ((err as Error).message === "Invalid youtube url") {
-          const searchResult = await searchYoutubeWithQueryString(query);
-          videoId = searchResult.video_id;
-        }
-      }
+      const videoId = extractVideoId(query);
       if (!videoId) return this.createResponse(null, []);
 
       const info = await this.innertube.getBasicInfo(videoId);
@@ -231,7 +235,11 @@ export class YoutubeSabrExtractor extends BaseExtractor {
       if (!videoId)
         throw new Error("Unable to extract video id from track.url");
       // Use the helper to create the SABR stream (returns Node.js readable)
-      const nodeStream = await createSabrStream(videoId);
+      const nodeStream = await createSabrStream(
+        videoId,
+        this.cookies,
+        this.logSabrEvents
+      );
       return nodeStream;
     } catch (e) {
       console.error(e);

@@ -7,12 +7,11 @@
  * Note: Type definitions are placeholders ('any').
  */
 
-import { Innertube, Platform, UniversalCache } from "youtubei.js";
-import { config } from "../config";
+import { Innertube, UniversalCache, Platform } from "youtubei.js";
 
 let ineerTubeInstance: any = null;
 
-Platform.shim.eval = async (data: any, env) => {
+Platform.shim.eval = async (data, env) => {
   const properties = [];
 
   if (env.n) properties.push(`n: exportedVars.nFunction("${env.n}")`);
@@ -28,12 +27,12 @@ Platform.shim.eval = async (data: any, env) => {
  * Get the Innertube instance
  * @returns {Promise<Innertube>} The Innertube instance
  */
-export async function getInnertube(options?: any) {
+export async function getInnertube(cookies: any): Promise<Innertube> {
   if (!ineerTubeInstance) {
     ineerTubeInstance = await Innertube.create({
       cache: new UniversalCache(false),
       // player_id: "0004de42",
-      cookie: config.YOUTUBE_COOKIE,
+      cookie: cookies,
     });
   }
   return ineerTubeInstance;

@@ -15,7 +15,10 @@ export const registerPlayerExtractors = async (player: Player) => {
     SoundcloudExtractor,
     {}
   );
-  const ytExt = await player.extractors.register(YoutubeSabrExtractor, {});
+  const ytExt = await player.extractors.register(YoutubeSabrExtractor, {
+    cookies: config.YOUTUBE_COOKIE,
+    logSabrEvents: false,
+  });
   const attatchmentExt = await player.extractors.register(
     AttachmentExtractor,
     {}
