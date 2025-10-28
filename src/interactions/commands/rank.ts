@@ -1,8 +1,13 @@
 import { User } from "../../models/User";
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { getRequiredXP, getXPToNextRank } from "../../modules/xpSystem";
-import { getRankImage, getRankTitle, RANKS } from "../../modules/rankSystem";
-import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
+import {
+  AttachmentBuilder,
+  ChatInputCommandInteraction,
+  SlashCommandBuilder,
+} from "discord.js";
+import { getRequiredXP } from "../../modules/xpSystem";
+import { getRankImage, getRankTitle } from "../../modules/rankSystem";
+import { Font } from "canvacord";
+import { LevelCard } from "../../utils/embeds/LevelCard";
 
 export const data = new SlashCommandBuilder()
   .setName("rank")
@@ -15,12 +20,16 @@ export const data = new SlashCommandBuilder()
   );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
+  await interaction.deferReply();
   const guildId = interaction.guildId;
   if (!guildId) return;
 
   const targetUser = interaction.options.getUser("target") || interaction.user;
+  const targetUserObj = await interaction.guild?.members.fetch(targetUser.id);
 
-  if (!targetUser) return;
+  if (!targetUserObj) return;
+
+  Font.loadDefault();
 
   let user = await User.findOne({
     guildId: guildId,
@@ -34,40 +43,18 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     await user.save();
   }
 
-  const rankTitle = getRankTitle(user.level);
-  const xpToNext = getXPToNextRank(user.level, user.xp) ?? 0;
+  const card = new LevelCard()
+    .setDisplayName(targetUserObj.displayName)
+    .setUsername(`@${targetUserObj.user.username}`)
+    .setAvatar(targetUserObj.user.displayAvatarURL({ size: 128 }))
+    .setCurrentXp(user.xp)
+    .setRequiredXp(getRequiredXP(user.level))
+    .setLevel(user.level)
+    .setRankTitle(getRankTitle(user.level))
+    .setRankBadge(getRankImage(user.level));
 
-  const tracksQueued = user.totalPlays;
-  const timesQueuedBossTracks = user.totalBossPlays;
+  const data = await card.build({ format: "png" });
+  const attachment = new AttachmentBuilder(data);
 
-  const createXPBar = (currentXP: number, xpNeeded: number, length = 20) => {
-    const filledLength = Math.round((currentXP / xpNeeded) * length);
-    const bar = "▓".repeat(filledLength) + "░".repeat(length - filledLength);
-    return bar;
-  };
-
-  const xpBar = createXPBar(user.xp, getRequiredXP(user.level + 1));
-
-  const message = buildEmbedMessage({
-    title: `${targetUser.toString()}'s Rank`,
-    titleFontSize: "md",
-    thumbnail: getRankImage(user.level),
-    description: `
-**Level: ** ${user.level === RANKS[0].minLevel ? "Max" : user.level}
-**Rank:** ${rankTitle}
-
-**XP to Next Level**
-${user.level === RANKS[0].minLevel ? "Max Level reached" : `${xpToNext} XP`}
-
-**Progress**
-${user.level === RANKS[0].minLevel ? createXPBar(1, 1) : `${xpBar}`}
-
-**Tracks queued:** ${tracksQueued}
-**Boss music plays:** ${timesQueuedBossTracks}
-    `,
-    color: "info",
-    footerText: "Keep playing music to level up!",
-  });
-
-  return interaction.reply(message);
+  return interaction.editReply({ files: [attachment] });
 }
