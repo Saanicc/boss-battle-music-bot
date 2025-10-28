@@ -20,6 +20,7 @@
     "@discordjs/opus": "^0.10.0",
     "@napi-rs/canvas": "^0.1.80",
     "bgutils-js": "^3.2.0",
+    "canvacord": "^6.0.4",
     "discord-player": "^7.1.0",
     "discord-player-soundcloud": "^1.0.7",
     "discord-player-spotify": "^1.1.7",

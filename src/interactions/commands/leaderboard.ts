@@ -1,8 +1,9 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
-import { emoji } from "../../utils/constants/emojis";
 import { User } from "../../models/User";
-import { getRankTitleWithEmoji } from "../../modules/rankSystem";
+import { Font } from "canvacord";
+import { LeaderboardBuilder } from "../../utils/helpers/Leaderboard";
+import { getRankTitle } from "../../modules/rankSystem";
 
 export const data = new SlashCommandBuilder()
   .setName("leaderboard")
@@ -14,14 +15,16 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   const guild = interaction.guild;
   if (!guild) {
     const message = buildEmbedMessage({ title: "No guild found." });
-    return interaction.followUp(message);
+    return interaction.editReply(message);
   }
 
   const guildMembers = await guild.members.fetch();
   if (!guildMembers) {
     const message = buildEmbedMessage({ title: "No guild members found." });
-    return interaction.followUp(message);
+    return interaction.editReply(message);
   }
+
+  Font.loadDefault();
 
   const getUserIds = () => {
     const users = guildMembers.filter((member) => !member.user.bot);
@@ -53,33 +56,40 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     }
   };
 
-  const buildLeaderboardDescription = (users: any[]) => {
+  const buildLeaderboard = (users: any[]) => {
     const sorted = [...users].sort((a, b) =>
       b.level === a.level ? b.xp - a.xp : b.level - a.level
     );
 
-    const lines = sorted.map((user, index) => {
-      const rank = index + 1;
-      const level = user.level ?? 0;
-      return `**#${rank}** <@${
-        user.userId
-      }>\nLevel ${level} — ${getRankTitleWithEmoji(user.level)}\n`;
+    const mappedUsers = sorted.map((user, index) => {
+      const discordUser = guildMembers.find(
+        (dUser) => dUser.id === user.userId
+      );
+
+      return {
+        avatar: discordUser?.user.displayAvatarURL({ size: 128 }) ?? "",
+        username: discordUser?.user.username ?? "",
+        displayName: discordUser?.displayName ?? "",
+        level: user.level,
+        xp: user.xp,
+        rank: index + 1,
+        rankTitle: getRankTitle(user.level),
+      };
     });
 
-    return lines.join("\n");
+    const lb = new LeaderboardBuilder()
+      .setHeader({
+        title: guild.name,
+        image: guild.iconURL() ?? "",
+        subtitle: `${guildMembers.size} members`,
+      })
+      .setPlayers(mappedUsers);
+
+    return lb;
   };
 
   const users = await findOrCreateUserInDB();
-  const leaderboardText = buildLeaderboardDescription(users);
+  const leaderboard = await buildLeaderboard(users).build();
 
-  const embedMessage = buildEmbedMessage({
-    title: `${emoji.victory} ${interaction.client.user.username}'s DJ leaderboard ${emoji.victory}`,
-    titleFontSize: "md",
-    description: leaderboardText,
-    color: "info",
-    thumbnail: interaction.client.user?.displayAvatarURL(),
-    footerText: `${interaction.client.user.username} • Gaming music made simple`,
-  });
-
-  await interaction.followUp(embedMessage);
+  await interaction.editReply({ files: [leaderboard] });
 }
