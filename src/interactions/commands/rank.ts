@@ -7,7 +7,7 @@ import {
 import { getRequiredXP } from "../../modules/xpSystem";
 import { getRankImage, getRankTitle } from "../../modules/rankSystem";
 import { Font } from "canvacord";
-import { LevelCard } from "../../utils/embeds/LevelCard";
+import { LevelCardBuilder } from "../../utils/helpers/LevelCard";
 
 export const data = new SlashCommandBuilder()
   .setName("rank")
@@ -43,7 +43,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     await user.save();
   }
 
-  const card = new LevelCard()
+  const card = new LevelCardBuilder()
     .setDisplayName(targetUserObj.displayName)
     .setUsername(`@${targetUserObj.user.username}`)
     .setAvatar(targetUserObj.user.displayAvatarURL({ size: 128 }))

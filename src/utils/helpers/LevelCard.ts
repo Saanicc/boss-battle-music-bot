@@ -1,6 +1,6 @@
 import { JSX, Builder, loadImage } from "canvacord";
 
-export class LevelCard extends Builder {
+export class LevelCardBuilder extends Builder {
   constructor() {
     super(800, 300);
     this.bootstrap({
