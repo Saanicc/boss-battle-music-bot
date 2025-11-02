@@ -2,28 +2,30 @@
 
 **Gaming Music Bot** is a Discord bot that brings dynamic soundtracks to your gaming sessions.
 Whether you’re relaxing with background music or preparing for an epic boss fight, this bot delivers the perfect vibe.
-Summon it anytime to power up your gameplay with cinematic, high-energy music. 🎮🎵
+Summon it anytime to power up your gameplay with cinematic, high-energy music.
 
 ---
 
-## ✨ Features
+## Features
 
-- 🎵 **Play boss music** from your pre-curated collection
-- 🔀 **Shuffles and reshuffles** boss tracks automatically
-- 📊 **Dynamic "Now Playing" embed** with:
+- **Play music from any `Spotify`, `Soundcloud` or `Youtube` URL**
+- **Play boss music** from your pre-curated collection
+- **Shuffles and reshuffles** boss tracks automatically
+- **Dynamic "Now Playing" embed** with:
   - Song name
   - Artist
   - Album art
   - Progress bar
   - Track number and duration
   - Requester tag
-- ⏯️ **Interactive buttons** — **⏸**, **⏵**, **<**, **>**, **⚔️**, **🏆** and **⏹**, **🧾**
-- 📡 **Auto updates** current song info every second
-- 💬 Clean, responsive embeds for a sleek experience
+  - DJ rank
+- **DJ Rank and leaderboard system**
+- **Interactive buttons**
+- Clean, responsive embeds for a sleek experience
 
 ---
 
-## 🧩 Commands
+## Commands
 
 | Command            | Description                                         |
 | ------------------ | --------------------------------------------------- |
@@ -33,25 +35,27 @@ Summon it anytime to power up your gameplay with cinematic, high-energy music. �
 | `/help`            | Shows info about available commands                 |
 | `/queue`           | Displays the next five upcoming tracks in the queue |
 | `/skip`            | Skip the currently playing song.                    |
+| `/rank`            | Check your (or another users) current DJ rank       |
+| `/leaderboard`     | View the DJ leaderboard (top 8 DJs)                 |
 
 ---
 
-## 🪄 Button Controls
+## Button Controls
 
-| Button | Action                                                                                            |
-| ------ | ------------------------------------------------------------------------------------------------- |
-| **⏸**  | Pauses music playback                                                                             |
-| **⏵**  | Resume music playback                                                                             |
-| **⚔️** | Reloads and shuffles all boss tracks                                                              |
-| **🏆** | Resumes old music queue if available, if not available it stops playback and leaves voice channel |
-| **⏹**  | Stops playback and leaves the voice channel                                                       |
-| **>**  | Play the next track                                                                               |
-| **<**  | Play the previous track                                                                           |
-| **🧾** | Displays the next five upcoming tracks in the queue                                               |
+| Button       | Action                                                                                            |
+| ------------ | ------------------------------------------------------------------------------------------------- |
+| **Pause**    | Pauses music playback                                                                             |
+| **Play**     | Resume music playback                                                                             |
+| **⚔️**       | Loads/Reloads and shuffles all boss tracks                                                        |
+| **🏆**       | Resumes old music queue if available, if not available it stops playback and leaves voice channel |
+| **Stop**     | Stops playback and leaves the voice channel                                                       |
+| **Next**     | Play the next track                                                                               |
+| **Previous** | Play the previous track                                                                           |
+| **Queue**    | Displays the next five upcoming tracks in the queue                                               |
 
 ---
 
-## ⚙️ Setup
+## Setup
 
 ### 1. Clone the repository
 
@@ -91,11 +95,11 @@ For local development:
 npm run dev
 ```
 
-## ⚙️ Docker Compose Setup
+## Docker Compose Setup
 
 A full guide on building and running the bot using Docker Compose can be found [here](./DOCKER_README.md)
 
-## 🚀 Example Usage
+## Example Usage
 
 When you’re facing a boss or epic challenge in-game:
 
@@ -120,12 +124,12 @@ Use the `/add_track` command and provide a track URL plus a track type.
 
 > The track URL must be a valid link from `Soundcloud`, `Spotify` or `YouTube`.
 
-## 🧠 Technical Notes
+## Technical Notes
 
 - Built with TypeScript and discord-player
 - Self-hosted friendly — no external API costs
 - Automatic queue and playback management
 
-## 🏁 License
+## License
 
 This project is licensed under the MIT License — feel free to modify and self-host.

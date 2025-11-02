@@ -31,6 +31,9 @@ Here's how to summon the power of music and unleash epic soundtracks:
 
 **/rank**
 > Check your own or someone else's current DJ rank.
+
+**/leaderboard**
+> View the DJ leaderboard
 `;
 
   const embedMessage = buildEmbedMessage({
