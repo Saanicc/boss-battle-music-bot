@@ -4,7 +4,6 @@ import {
   SlashCommandBuilder,
   TextChannel,
 } from "discord.js";
-import { getAllMusicFiles } from "../../utils/helpers/getAllMusicFiles";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
 import { getRandomFightGif } from "../../utils/helpers/getRandomFightingGif";
 import { queueManager } from "../../services/queueManager";
@@ -59,16 +58,9 @@ export const execute = async (
   });
 
   try {
-    const tracks = await getBossTracks(
-      "music/boss_music.json",
-      player,
-      interaction.user
-    );
-    const hornTracks = await getAllMusicFiles(
-      "music/horns",
-      player,
-      interaction.user
-    );
+    const tracks = await getBossTracks("song", player, interaction.user);
+    const hornTracks = await getBossTracks("horn", player, interaction.user);
+
     const pickRandomHornTrack = () => {
       const number = Math.floor(Math.random() * hornTracks.length);
       return hornTracks[number];

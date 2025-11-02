@@ -95,50 +95,6 @@ npm run dev
 
 A full guide on building and running the bot using Docker Compose can be found [here](./DOCKER_README.md)
 
-## 💾 Volumes
-
-Your music library is mounted as a Docker volume, allowing you to easily add, remove, or replace songs without rebuilding the container.
-
-```bash
-volumes:
-  - ./music:/app/music
-```
-
-### 📁 Music Folder Structure
-
-Make sure your local `./music` directory includes the following:
-
-```plaintext
-music/
-├── horns/
-│   ├── horn1.mp3
-│   └── horn2.mp3
-└── boss_music.json
-```
-
-### 🧾 boss_music.json
-
-This file defines your boss battle tracks and must be located directly inside the `/music` directory.
-
-Required format:
-
-```json
-{
-  "bossTracks": [
-    "https://open.spotify.com/track/your-boss-track-url",
-    "https://open.spotify.com/track/another-boss-track"
-  ]
-}
-```
-
-Each entry should be a valid `Soundcloud`, `Spotify` or `YouTube` URL.
-
-### ✅ Required folders and files:
-
-- /music
-- /music/horns
-- /music/boss_music.json
-
 ## 🚀 Example Usage
 
 When you’re facing a boss or epic challenge in-game:
@@ -149,6 +105,20 @@ When you’re facing a boss or epic challenge in-game:
 
 The bot joins your voice channel and blasts a shuffled selection of your boss music collection.  
 You’ll see a Now Playing embed with progress bar and interactive buttons.
+
+> Make sure you've added tracks to your boss music collection using `/add_track` first
+
+## How to add tracks to your boss music collection
+
+Use the `/add_track` command and provide a track URL plus a track type.
+
+**Track Types:**
+
+`song` – Full music tracks played during boss fights or intense gameplay.
+
+`horn` – Short horn sounds played randomly as an intro before the main track.
+
+> The track URL must be a valid link from `Soundcloud`, `Spotify` or `YouTube`.
 
 ## 🧠 Technical Notes
 

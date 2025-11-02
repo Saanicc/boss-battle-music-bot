@@ -1,14 +1,10 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
-import path from "path";
-import fs from "fs";
 import { getFormattedTrackDescription } from "../../utils/helpers/getFormattedTrackDescription";
 import { useMainPlayer, useQueue } from "discord-player";
 import { getThumbnail } from "../../utils/helpers/utils";
-
-type FileData = {
-  bossTracks: string[];
-};
+import { BossTrack, TrackType } from "../../models/BossTrack";
+import { getSearchEngine } from "../../utils/helpers/getSearchEngine";
 
 export const data = new SlashCommandBuilder()
   .setName("add_track")
@@ -18,10 +14,27 @@ export const data = new SlashCommandBuilder()
       .setName("url")
       .setDescription("Enter url of track to add")
       .setRequired(true)
+  )
+  .addStringOption((option) =>
+    option
+      .setName("type")
+      .setDescription("Select a track type")
+      .setRequired(true)
+      .addChoices(
+        {
+          name: "Horn sound",
+          value: "horn" as TrackType,
+        },
+        {
+          name: "Song",
+          value: "song" as TrackType,
+        }
+      )
   );
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
   const url = interaction.options.getString("url", true);
+  const selectedType = interaction.options.getString("type", true) as TrackType;
 
   if (!url.match(/https:\/\/.*.*/)) {
     const data = buildEmbedMessage({
@@ -33,21 +46,32 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
     return interaction.reply(data);
   }
 
-  const fullPath = path.join(process.cwd(), "/music/boss_music.json");
-  const fileData = JSON.parse(fs.readFileSync(fullPath, "utf-8")) as FileData;
+  let trackAlreadyExist: Boolean;
 
-  if (Array.isArray(fileData.bossTracks)) {
-    if (fileData.bossTracks.find((trackUrl) => trackUrl === url)) {
-      const message = buildEmbedMessage({
-        title: "The track (URL) already exist!",
-        ephemeral: true,
-        color: "error",
-      });
-      return interaction.reply(message);
-    }
+  try {
+    trackAlreadyExist = !!(await BossTrack.findOne({ trackUrl: url }));
+  } catch (error) {
+    console.error(
+      `[addTrack (find in DB)]: ${
+        error instanceof Error ? error.message : error
+      }`
+    );
 
-    fileData.bossTracks.push(url);
-    fs.writeFileSync(fullPath, JSON.stringify(fileData));
+    const message = buildEmbedMessage({
+      title: "An error occured. Please try again.",
+      ephemeral: true,
+      color: "error",
+    });
+    return interaction.reply(message);
+  }
+
+  if (trackAlreadyExist) {
+    const message = buildEmbedMessage({
+      title: "The track already exist!",
+      ephemeral: true,
+      color: "error",
+    });
+    return interaction.reply(message);
   }
 
   const player = useMainPlayer();
@@ -55,6 +79,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 
   const result = await player.search(url, {
     requestedBy: interaction.user,
+    searchEngine: getSearchEngine(url),
   });
 
   if (result.tracks.length === 0) {
@@ -69,12 +94,32 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
     return interaction.reply(data);
   }
 
+  try {
+    await BossTrack.create({ trackUrl: url, trackType: selectedType });
+  } catch (error) {
+    console.error(
+      `[addTrack (add to DB)]: ${
+        error instanceof Error ? error.message : error
+      }`
+    );
+
+    const message = buildEmbedMessage({
+      title:
+        "An error occured when saving track to database. Please try again.",
+      ephemeral: true,
+      color: "error",
+    });
+    interaction.reply(message);
+  }
+
   const data = buildEmbedMessage({
     title: `Added successfully`,
     description: `${interaction.user.toString()} added ${getFormattedTrackDescription(
       result.tracks[0],
       queue
-    )} to the boss music library!`,
+    )} to the ${
+      selectedType === "song" ? "boss music" : "horn sound"
+    } library!`,
     thumbnail: getThumbnail(result.tracks[0]),
     color: "success",
   });
