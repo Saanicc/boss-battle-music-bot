@@ -32,7 +32,7 @@ export class LeaderboardBuilder extends Builder {
   }
 
   setPlayers(players: PlayerData[]) {
-    this.players = players.slice(0, 10);
+    this.players = players.slice(0, 8);
     return this;
   }
 
