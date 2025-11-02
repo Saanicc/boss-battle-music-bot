@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
-import { Player, QueryType, Track } from "discord-player";
+import { Player, Track } from "discord-player";
 import { User } from "discord.js";
+import { getSearchEngine } from "./getSearchEngine";
 
 export const getBossTracks = async (
   jsonPath: string,
@@ -23,6 +24,7 @@ export const getBossTracks = async (
     for (const url of trackUrls) {
       const result = await player.search(url, {
         requestedBy,
+        searchEngine: getSearchEngine(url),
       });
 
       if (result.hasTracks()) {

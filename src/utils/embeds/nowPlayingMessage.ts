@@ -22,6 +22,7 @@ import { queueButton } from "../../interactions/buttons/queue";
 import { nextButton } from "../../interactions/buttons/next";
 import { previousButton } from "../../interactions/buttons/previous";
 import { emoji } from "../constants/emojis";
+import { getThumbnail } from "../helpers/utils";
 
 const createProgressBar = (queue: GuildQueue, size = 16) => {
   return queue.node.createProgressBar({
@@ -69,7 +70,7 @@ ${progressBar}
 
   const requestedByText = new TextDisplayBuilder().setContent(footerText);
 
-  const thumbnail = new ThumbnailBuilder().setURL(track.thumbnail);
+  const thumbnail = new ThumbnailBuilder().setURL(getThumbnail(track));
 
   const headerSection = new SectionBuilder()
     .addTextDisplayComponents(trackInfoText)

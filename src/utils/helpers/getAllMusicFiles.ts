@@ -4,7 +4,7 @@ import fs from "fs";
 import { Player, QueryType, Track } from "discord-player";
 import { SoundcloudExtractor } from "discord-player-soundcloud";
 import { SpotifyExtractor } from "discord-player-spotify";
-import { YoutubeSabrExtractor } from "../../youtubei/youtubeiExtractor";
+import { YoutubeExtractor } from "discord-player-youtube";
 
 export const getAllMusicFiles = async (
   searchPath: string,
@@ -33,7 +33,7 @@ export const getAllMusicFiles = async (
       blockExtractors: [
         SoundcloudExtractor.identifier,
         SpotifyExtractor.identifier,
-        YoutubeSabrExtractor.identifier,
+        YoutubeExtractor.identifier,
       ],
     });
     if (result.hasTracks()) {

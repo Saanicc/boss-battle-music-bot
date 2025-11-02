@@ -3,6 +3,8 @@ import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
 import { useMainPlayer, useQueue } from "discord-player";
 import { getFormattedTrackDescription } from "../../utils/helpers/getFormattedTrackDescription";
 import { updateUserLevel } from "../../utils/helpers/updateUserLevel";
+import { getSearchEngine } from "../../utils/helpers/getSearchEngine";
+import { getThumbnail } from "../../utils/helpers/utils";
 
 export const data = new SlashCommandBuilder()
   .setName("play")
@@ -41,9 +43,11 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
       leaveOnEmptyCooldown: 15000,
     });
   }
+
   try {
     const result = await player.search(query, {
       requestedBy: interaction.user,
+      searchEngine: getSearchEngine(query),
     });
 
     if (!result.tracks.length) {
@@ -61,7 +65,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
       message = buildEmbedMessage({
         title: `Queued`,
         description: `[${result.playlist?.title}](${result.playlist?.url}) with ${result.playlist?.tracks.length} tracks`,
-        thumbnail: result.playlist?.thumbnail,
+        thumbnail: getThumbnail(result.playlist),
         footerText:
           "Not the correct track? Try being more specific or enter a URL",
         color: "queue",
@@ -73,7 +77,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
       message = buildEmbedMessage({
         title: `Queued at position #${normalQueue.tracks.size}`,
         description: `${getFormattedTrackDescription(track, normalQueue)}`,
-        thumbnail: result.tracks[0].thumbnail,
+        thumbnail: getThumbnail(result.tracks[0]),
         footerText:
           "Not the correct track? Try being more specific or enter a URL",
         color: "queue",
