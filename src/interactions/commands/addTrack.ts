@@ -4,6 +4,7 @@ import path from "path";
 import fs from "fs";
 import { getFormattedTrackDescription } from "../../utils/helpers/getFormattedTrackDescription";
 import { useMainPlayer, useQueue } from "discord-player";
+import { getThumbnail } from "../../utils/helpers/utils";
 
 type FileData = {
   bossTracks: string[];
@@ -74,7 +75,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
       result.tracks[0],
       queue
     )} to the boss music library!`,
-    thumbnail: result.tracks[0]?.thumbnail,
+    thumbnail: getThumbnail(result.tracks[0]),
     color: "success",
   });
 
