@@ -71,7 +71,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         username: discordUser?.user.username ?? "",
         displayName: discordUser?.displayName ?? "",
         level: user.level,
-        xp: user.xp,
+        xp: user.totalXp,
         rank: index + 1,
         rankTitle: getRankTitle(user.level),
       };

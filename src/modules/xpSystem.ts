@@ -2,7 +2,7 @@ import { User, UserType } from "../models/User";
 
 export type XPGrantingCommand = "play_boss_music" | "play";
 
-const XP_BASE = 2;
+const XP_BASE = 3;
 
 export const getRequiredXP = (level: number) => {
   const formula = 10 + (level * 12) ** 1.2;
@@ -10,6 +10,7 @@ export const getRequiredXP = (level: number) => {
 };
 
 const levelUpUser = (user: UserType, gainedXP: number) => {
+  user.totalXp += gainedXP;
   user.xp += gainedXP;
 
   let leveledUp = false;
