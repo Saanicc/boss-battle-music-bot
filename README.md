@@ -17,8 +17,7 @@ Summon it anytime to power up your gameplay with cinematic, high-energy music.
   - Album art
   - Progress bar
   - Track number and duration
-  - Requester tag
-  - DJ rank
+  - Requester tag and DJ rank
 - **DJ Rank and leaderboard system**
 - **Interactive buttons**
 - Clean, responsive embeds for a sleek experience
