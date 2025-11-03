@@ -61,8 +61,6 @@ services:
     container_name: gaming-music-bot
     restart: unless-stopped
     env_file: ./.env
-    volumes:
-      - ./music:/app/music
     depends_on:
       - mongodb
     networks:
