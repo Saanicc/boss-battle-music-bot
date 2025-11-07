@@ -1,10 +1,11 @@
 import { ButtonBuilder, ButtonInteraction, ButtonStyle } from "discord.js";
 import { queueManager } from "../../services/queueManager";
 import { useQueue } from "discord-player";
+import { emoji } from "../../utils/constants/emojis";
 
 export const stopButton = new ButtonBuilder()
   .setCustomId("stop")
-  .setLabel("⏹")
+  .setEmoji(emoji.stop)
   .setStyle(ButtonStyle.Danger);
 
 export const execute = async (interaction: ButtonInteraction) => {

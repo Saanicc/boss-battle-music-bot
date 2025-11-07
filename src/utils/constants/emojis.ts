@@ -1,6 +1,7 @@
 type Emoji =
   | "play"
   | "pause"
+  | "stop"
   | "previous"
   | "next"
   | "queue"
@@ -15,6 +16,7 @@ type XpEmoji = "coins" | "gold" | "rare" | "epic" | "legendary";
 export const emoji: Record<Emoji, string> = {
   play: "<:play:1431066649116672171>",
   pause: "<:pause:1431066657249558669>",
+  stop: "<:stop:1436463595155226634>",
   previous: "<:left:1431066658675622020>",
   next: "<:right:1431066660306948246>",
   queue: "<:queue:1431066663004016690>",
