@@ -44,7 +44,7 @@ export const updateUserLevel = async (
     }
 
     const message = buildEmbedMessage({
-      title: emoji.levelup,
+      title: `${emoji.levelup} Level up! ${emoji.levelup}`,
       description: `${interaction.user.toString()} gained **${levelsGained} ${
         levelsGained > 1 ? "levels" : "level"
       }** and is now **Level ${user.level}**!${rankMessage}`,

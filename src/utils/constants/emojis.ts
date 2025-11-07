@@ -20,7 +20,7 @@ export const emoji: Record<Emoji, string> = {
   previous: "<:left:1431066658675622020>",
   next: "<:right:1431066660306948246>",
   queue: "<:queue:1431066663004016690>",
-  levelup: "<:levelup:1431066666795798610>",
+  levelup: "<a:levelup:1436470749820096664>",
   treasure: "<:crate:1431064935760134306>",
   info: "<:info:1431066661661970533>",
   fight: "<:swords:1431064938922901625>",
