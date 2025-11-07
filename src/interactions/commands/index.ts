@@ -6,6 +6,10 @@ import * as queue from "./queue";
 import * as skip from "./skip";
 import * as rank from "./rank";
 import * as leaderboard from "./leaderboard";
+import * as autoplay from "./autoplay";
+import * as loop_all from "./loop-all";
+import * as loop_current from "./loop-current";
+import * as loop_disable from "./loop-disable";
 
 export const commands = {
   help,
@@ -16,4 +20,8 @@ export const commands = {
   skip,
   rank,
   leaderboard,
+  autoplay,
+  loop_all,
+  loop_current,
+  loop_disable,
 };
