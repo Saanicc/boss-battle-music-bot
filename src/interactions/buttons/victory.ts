@@ -13,8 +13,8 @@ import { musicPlayerMessage } from "../../services/musicPlayerMessage";
 import { useQueue } from "discord-player";
 import { emoji } from "../../utils/constants/emojis";
 
-export const enemiesSlainButton = new ButtonBuilder()
-  .setCustomId("enemies_slain")
+export const victoryButton = new ButtonBuilder()
+  .setCustomId("victory")
   .setEmoji(emoji.victory)
   .setStyle(ButtonStyle.Secondary);
 

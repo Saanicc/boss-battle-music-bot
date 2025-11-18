@@ -10,8 +10,8 @@ import {
   TextDisplayBuilder,
   ThumbnailBuilder,
 } from "discord.js";
-import { enemiesSlainButton } from "../../interactions/buttons/enemiesSlain";
-import { slayEnemiesButton } from "../../interactions/buttons/slayEnemies";
+import { victoryButton } from "../../interactions/buttons/victory";
+import { bossMusicButton } from "../../interactions/buttons/playBossMusic";
 import { stopButton } from "../../interactions/buttons/stop";
 import { colors } from "../constants/colors";
 import { queueManager } from "../../services/queueManager";
@@ -51,7 +51,7 @@ export const buildNowPlayingMessage = (
     queueButton
   );
   const row2 = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    isBossQueue ? enemiesSlainButton : slayEnemiesButton
+    isBossQueue ? victoryButton : bossMusicButton
   );
 
   const progressBar = queue ? createProgressBar(queue) : "N/A";
