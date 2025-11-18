@@ -4,7 +4,7 @@ import {
   ChatInputCommandInteraction,
 } from "discord.js";
 import { useQueue } from "discord-player";
-import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
+import { buildMessage } from "../../utils/bot-message/buildMessage";
 import { emoji } from "../../utils/constants/emojis";
 
 export const previousButton = new ButtonBuilder()
@@ -16,7 +16,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   const queue = useQueue();
 
   if (!queue) {
-    const data = buildEmbedMessage({
+    const data = buildMessage({
       title: "This server does not have an active player session.",
       ephemeral: true,
       color: "info",
@@ -25,7 +25,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   }
 
   if (!queue.isPlaying()) {
-    const data = buildEmbedMessage({
+    const data = buildMessage({
       title: "There is no track playing.",
       ephemeral: true,
       color: "info",

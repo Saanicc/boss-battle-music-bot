@@ -1,7 +1,7 @@
 import { ButtonInteraction, CommandInteraction, TextChannel } from "discord.js";
 import { addXP, XPGrantingCommand } from "../../modules/xpSystem";
 import { getRankTitleWithEmoji } from "../../modules/rankSystem";
-import { buildEmbedMessage } from "../embeds/embedMessage";
+import { buildMessage } from "../bot-message/buildMessage";
 import { getTreasureInfo } from "./getTreasureMessage";
 import { emoji } from "../constants/emojis";
 
@@ -27,7 +27,7 @@ export const updateUserLevel = async (
     if (!treasureInfo) return;
 
     const { title, description } = treasureInfo;
-    const message = buildEmbedMessage({
+    const message = buildMessage({
       title,
       description,
     });
@@ -43,7 +43,7 @@ export const updateUserLevel = async (
       rankMessage = `\nNew rank: **${newRank}**!`;
     }
 
-    const message = buildEmbedMessage({
+    const message = buildMessage({
       title: `${emoji.levelup} Level up! ${emoji.levelup}`,
       description: `${interaction.user.toString()} gained **${levelsGained} ${
         levelsGained > 1 ? "levels" : "level"

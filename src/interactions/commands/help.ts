@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
+import { buildMessage } from "../../utils/bot-message/buildMessage";
 import { emoji } from "../../utils/constants/emojis";
 
 export const data = new SlashCommandBuilder()
@@ -36,7 +36,7 @@ Here's how to summon the power of music and unleash epic soundtracks:
 > View the DJ leaderboard
 `;
 
-  const embedMessage = buildEmbedMessage({
+  const embedMessage = buildMessage({
     title: `${emoji.info} ${interaction.client.user.username}'s help menu ${emoji.info}`,
     titleFontSize: "md",
     color: "info",

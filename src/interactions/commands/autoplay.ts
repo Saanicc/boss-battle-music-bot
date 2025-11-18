@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
+import { buildMessage } from "../../utils/bot-message/buildMessage";
 import { QueueRepeatMode, useQueue } from "discord-player";
 
 export const data = new SlashCommandBuilder()
@@ -21,7 +21,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   const queue = useQueue();
 
   if (!queue) {
-    const data = buildEmbedMessage({
+    const data = buildMessage({
       title: "This server does not have an active player session.",
       ephemeral: true,
       color: "info",
@@ -39,7 +39,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     title = "Autoplay has been turned off";
   }
 
-  const embedMessage = buildEmbedMessage({
+  const embedMessage = buildMessage({
     title,
     color: "info",
   });

@@ -4,7 +4,7 @@ import {
   SlashCommandBuilder,
   TextChannel,
 } from "discord.js";
-import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
+import { buildMessage } from "../../utils/bot-message/buildMessage";
 import { getRandomFightGif } from "../../utils/helpers/getRandomFightingGif";
 import { queueManager } from "../../services/queueManager";
 import { savePreviousQueue } from "../../utils/helpers/saveQueueData";
@@ -30,7 +30,7 @@ export const execute = async (
   const channel = guildMember?.voice.channel;
 
   if (!channel) {
-    const data = buildEmbedMessage({
+    const data = buildMessage({
       title: "❌ You must be in a voice channel.",
       color: "error",
       ephemeral: true,
@@ -72,7 +72,7 @@ export const execute = async (
 
     queueManager.setQueueType("boss");
 
-    const data = buildEmbedMessage({
+    const data = buildMessage({
       title: `${emoji.fight} Time to slay some enemies! ${emoji.fight}`,
       titleFontSize: "lg",
       imageUrl: await getRandomFightGif(),

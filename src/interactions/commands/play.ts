@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
+import { buildMessage } from "../../utils/bot-message/buildMessage";
 import { useMainPlayer, useQueue } from "discord-player";
 import { getFormattedTrackDescription } from "../../utils/helpers/getFormattedTrackDescription";
 import { updateUserLevel } from "../../utils/helpers/updateUserLevel";
@@ -25,7 +25,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
   const channel = member?.voice.channel;
 
   if (!channel) {
-    const data = buildEmbedMessage({
+    const data = buildMessage({
       title: "❌ You must be in a voice channel.",
       ephemeral: true,
     });
@@ -51,7 +51,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
     });
 
     if (!result.tracks.length) {
-      const data = buildEmbedMessage({
+      const data = buildMessage({
         title: "❌ No results found.",
       });
       return interaction.reply(data);
@@ -62,7 +62,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
     if (result.hasPlaylist()) {
       normalQueue.addTrack(result.playlist?.tracks ?? []);
 
-      message = buildEmbedMessage({
+      message = buildMessage({
         title: `Queued`,
         description: `[${result.playlist?.title}](${result.playlist?.url}) with ${result.playlist?.tracks.length} tracks`,
         thumbnail: getThumbnail(result.playlist),
@@ -74,7 +74,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
       const track = result.tracks[0];
       normalQueue.addTrack(track);
 
-      message = buildEmbedMessage({
+      message = buildMessage({
         title: `Queued at position #${normalQueue.tracks.size}`,
         description: `${getFormattedTrackDescription(track, normalQueue)}`,
         thumbnail: getThumbnail(result.tracks[0]),

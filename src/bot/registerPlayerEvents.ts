@@ -4,9 +4,9 @@ import {
   MessageEditOptions,
   TextChannel,
 } from "discord.js";
-import { buildNowPlayingMessage } from "../utils/embeds/nowPlayingMessage";
+import { buildNowPlayingMessage } from "../utils/bot-message/buildNowPlayingMessage";
 import { musicPlayerMessage } from "../services/musicPlayerMessage";
-import { buildEmbedMessage } from "../utils/embeds/embedMessage";
+import { buildMessage } from "../utils/bot-message/buildMessage";
 import { getTrackRequestedByFooterText } from "../utils/helpers/getTrackRequestedByText";
 
 export const registerPlayerEvents = (player: Player) => {
@@ -77,7 +77,7 @@ export const registerPlayerEvents = (player: Player) => {
     await musicPlayerMessage.delete();
     musicPlayerMessage.set(undefined);
 
-    const data = buildEmbedMessage({
+    const data = buildMessage({
       title: "Left the voice channel",
       color: "default",
     });
@@ -91,7 +91,7 @@ export const registerPlayerEvents = (player: Player) => {
 
     queue.history.clear();
 
-    const data = buildEmbedMessage({
+    const data = buildMessage({
       title:
         "Reached the end of the queue. Please queue new track(s) to continue playback.",
       color: "info",
@@ -107,7 +107,7 @@ export const registerPlayerEvents = (player: Player) => {
     const streamUrl =
       track.raw?.source?.url || track.raw?.url || track.url || "N/A";
 
-    const data = buildEmbedMessage({
+    const data = buildMessage({
       title: `⚠️ ${error.name} ⚠️`,
       titleFontSize: "md",
       description: `
@@ -127,7 +127,7 @@ export const registerPlayerEvents = (player: Player) => {
   player.events.on(GuildQueueEvent.Error, async (queue, error) => {
     const channel = queue.metadata.channel as TextChannel;
 
-    const embed = buildEmbedMessage({
+    const embed = buildMessage({
       title: `⚠️ ${error.name} ⚠️`,
       titleFontSize: "md",
       description: error.message,

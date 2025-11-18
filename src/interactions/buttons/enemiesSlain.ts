@@ -8,7 +8,7 @@ import {
 import { queueManager } from "../../services/queueManager";
 import { restoreOldQueue } from "../../utils/helpers/restoreOldQueue";
 import { delay } from "../../utils/helpers/utils";
-import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
+import { buildMessage } from "../../utils/bot-message/buildMessage";
 import { musicPlayerMessage } from "../../services/musicPlayerMessage";
 import { useQueue } from "discord-player";
 import { emoji } from "../../utils/constants/emojis";
@@ -37,7 +37,7 @@ export const execute = async (interaction: ButtonInteraction) => {
   const stored = queueManager.retrieve(guild.id);
 
   if (!stored) {
-    const data = buildEmbedMessage({
+    const data = buildMessage({
       title:
         "Nothing to restore, leaving voice chat. Please queue some new track(s) to resume playback!",
     });
@@ -48,7 +48,7 @@ export const execute = async (interaction: ButtonInteraction) => {
     );
   }
 
-  const data = buildEmbedMessage({
+  const data = buildMessage({
     title: "Restoring old queue...",
     color: "info",
   });

@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
+import { buildMessage } from "../../utils/bot-message/buildMessage";
 import { getFormattedTrackDescription } from "../../utils/helpers/getFormattedTrackDescription";
 import { useMainPlayer, useQueue } from "discord-player";
 import { getThumbnail } from "../../utils/helpers/utils";
@@ -37,7 +37,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
   const selectedType = interaction.options.getString("type", true) as TrackType;
 
   if (!url.match(/https:\/\/.*.*/)) {
-    const data = buildEmbedMessage({
+    const data = buildMessage({
       title: "Not a valid url",
       description: "Please enter a valid url",
       ephemeral: true,
@@ -57,7 +57,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
       }`
     );
 
-    const message = buildEmbedMessage({
+    const message = buildMessage({
       title: "An error occured. Please try again.",
       ephemeral: true,
       color: "error",
@@ -66,7 +66,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
   }
 
   if (trackAlreadyExist) {
-    const message = buildEmbedMessage({
+    const message = buildMessage({
       title: "The track already exist!",
       ephemeral: true,
       color: "error",
@@ -83,7 +83,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
   });
 
   if (result.tracks.length === 0) {
-    const data = buildEmbedMessage({
+    const data = buildMessage({
       title: "No track found",
       description:
         "No track with that URL was found, please make sure the URL is valid.",
@@ -103,7 +103,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
       }`
     );
 
-    const message = buildEmbedMessage({
+    const message = buildMessage({
       title:
         "An error occured when saving track to database. Please try again.",
       ephemeral: true,
@@ -112,7 +112,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
     interaction.reply(message);
   }
 
-  const data = buildEmbedMessage({
+  const data = buildMessage({
     title: `Added successfully`,
     description: `${interaction.user.toString()} added ${getFormattedTrackDescription(
       result.tracks[0],

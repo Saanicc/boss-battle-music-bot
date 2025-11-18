@@ -4,7 +4,7 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 import { useQueue } from "discord-player";
-import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
+import { buildMessage } from "../../utils/bot-message/buildMessage";
 import { getFormattedTrackDescription } from "../../utils/helpers/getFormattedTrackDescription";
 import { emoji } from "../../utils/constants/emojis";
 
@@ -18,7 +18,7 @@ export async function execute(
   const queue = useQueue();
 
   if (!queue) {
-    const data = buildEmbedMessage({
+    const data = buildMessage({
       title: "This server does not have an active player session.",
       ephemeral: true,
       color: "info",
@@ -43,7 +43,7 @@ export async function execute(
       .join("\n");
   };
 
-  const data = buildEmbedMessage({
+  const data = buildMessage({
     title: `${emoji.play} Now Playing`,
     description: `
 ${getFormattedTrackDescription(currentTrack, queue)}

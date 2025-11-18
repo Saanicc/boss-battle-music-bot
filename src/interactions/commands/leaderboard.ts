@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { buildEmbedMessage } from "../../utils/embeds/embedMessage";
+import { buildMessage } from "../../utils/bot-message/buildMessage";
 import { User } from "../../models/User";
 import { Font } from "canvacord";
 import { LeaderboardBuilder } from "../../utils/helpers/Leaderboard";
@@ -14,13 +14,13 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
   const guild = interaction.guild;
   if (!guild) {
-    const message = buildEmbedMessage({ title: "No guild found." });
+    const message = buildMessage({ title: "No guild found." });
     return interaction.editReply(message);
   }
 
   const guildMembers = await guild.members.fetch();
   if (!guildMembers) {
-    const message = buildEmbedMessage({ title: "No guild members found." });
+    const message = buildMessage({ title: "No guild members found." });
     return interaction.editReply(message);
   }
 

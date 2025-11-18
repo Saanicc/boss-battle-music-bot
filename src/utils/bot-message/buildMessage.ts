@@ -12,7 +12,7 @@ import {
 } from "discord.js";
 import { colors as colorConstant, ColorType } from "../constants/colors";
 
-export const buildEmbedMessage = ({
+export const buildMessage = ({
   title,
   titleFontSize = "sm",
   color,
