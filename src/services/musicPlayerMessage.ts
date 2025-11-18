@@ -13,13 +13,15 @@ export const musicPlayerMessage = {
   },
 
   async edit(data: string | MessageEditOptions | MessagePayload) {
-    if (nowPlayingMessage) await nowPlayingMessage.edit(data);
+    if (nowPlayingMessage) return await nowPlayingMessage.edit(data);
   },
 
   async delete() {
     if (!nowPlayingMessage) return;
 
     await nowPlayingMessage.delete();
+    nowPlayingMessage = undefined;
+    return;
   },
 
   clearProgressInterval() {

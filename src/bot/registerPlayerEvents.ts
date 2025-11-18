@@ -7,7 +7,6 @@ import {
 import { buildNowPlayingMessage } from "../utils/embeds/nowPlayingMessage";
 import { musicPlayerMessage } from "../services/musicPlayerMessage";
 import { buildEmbedMessage } from "../utils/embeds/embedMessage";
-import { delay } from "../utils/helpers/utils";
 import { getTrackRequestedByFooterText } from "../utils/helpers/getTrackRequestedByText";
 
 export const registerPlayerEvents = (player: Player) => {
@@ -15,12 +14,11 @@ export const registerPlayerEvents = (player: Player) => {
     const channel = queue.metadata.channel as TextChannel;
 
     musicPlayerMessage.clearProgressInterval();
-
     try {
       await musicPlayerMessage.delete();
-    } catch {}
-
-    await delay(1000);
+    } catch (error) {
+      console.error(error);
+    }
 
     const footerText = await getTrackRequestedByFooterText(
       track.requestedBy,
@@ -34,6 +32,11 @@ export const registerPlayerEvents = (player: Player) => {
     musicPlayerMessage.setProgressInterval(
       setInterval(async () => {
         if (!queue.node.isPlaying()) return;
+        if (
+          !musicPlayerMessage.get() ||
+          musicPlayerMessage.get()?.id !== msg.id
+        )
+          return;
 
         const updateData = buildNowPlayingMessage(
           track,
