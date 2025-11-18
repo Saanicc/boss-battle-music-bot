@@ -10,6 +10,7 @@ import * as autoplay from "./autoplay";
 import * as loop_all from "./loop-all";
 import * as loop_current from "./loop-current";
 import * as loop_disable from "./loop-disable";
+import * as nightcore from "./nightcore";
 
 export const commands = {
   help,
@@ -24,4 +25,5 @@ export const commands = {
   loop_all,
   loop_current,
   loop_disable,
+  nightcore,
 };
